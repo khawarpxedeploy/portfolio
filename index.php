@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
@@ -8,6 +7,10 @@
  */
 
 define('LARAVEL_START', microtime(true));
+
+if (file_exists(__DIR__.'/../storage/framework/maintenance.php')) {
+    require __DIR__.'/../storage/framework/maintenance.php';
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +24,7 @@ define('LARAVEL_START', microtime(true));
 |
 */
 
-require __DIR__.'/script/vendor/autoload.php';
+require __DIR__.'/core/vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +38,7 @@ require __DIR__.'/script/vendor/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/script/bootstrap/app.php';
+$app = require_once __DIR__.'/core/bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
