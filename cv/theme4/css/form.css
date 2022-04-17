@@ -1,0 +1,11 @@
+.user-img img {
+    border-radius: 147px;
+    border: 8px solid #fff;
+    height: 180px;
+    width: 180px !important;
+    object-fit: cover !important;
+}
+
+.pt-0 {
+    padding-top: 0 !important;
+}

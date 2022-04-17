@@ -1,0 +1,157 @@
+
+body {
+    background: bisque;
+    font-family: 'Jost', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+.f-right {
+    float: right;
+}
+
+.cv-templates-area {
+    background: #fff;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.single-sidebar {
+    /* background: #252735; */
+    padding-bottom: 50px;
+    height: 100%;
+}
+
+.user-img {
+    padding-top: 50px;
+}
+
+.user-img img {
+    border-radius: 147px;
+    border: 8px solid #fff;
+    height: 180px;
+    width: 180px;
+}
+
+.user-info-area {
+    padding-left: 35px;
+    margin-top: 40px;
+}
+
+.info-header h4 {
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 24px;
+    letter-spacing: 5px;
+}
+
+.info-header {
+    border-bottom: 1px dashed #b1b1b1;
+    padding-bottom: 5px;
+    margin-bottom: 30px;
+}
+
+.single-info {
+    display: flex;
+    color: #fff;
+    padding-bottom: 20px;
+}
+
+.single-info .info-icon svg {
+    font-size: 21px;
+    margin-right: 5px;
+}
+
+.info-data h5 {
+    font-weight: 400;
+    margin-bottom: 4px;
+    font-size: 19px;
+}
+
+.info-data span {
+    color: #dedede;
+}
+
+.info-icon {
+    margin-right: 5px;
+}
+
+.info-data p {
+    margin-bottom: 5px;
+    color: #d8d7d7;
+}
+
+.user-name h2 {
+    color: #3a3939;
+    font-weight: 700;
+    font-size: 65px;
+    margin-bottom: 5px;
+    letter-spacing: 10px;
+}
+
+.user-name p {
+    color: #565656;
+    font-size: 25px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.template-right-section {
+    margin-top: 30px;
+    margin-left: 15px;
+}
+
+.eduction-area {
+    margin-top: 30px;
+}
+
+.education-header h4 {
+    color: #666;
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 5px;
+}
+
+.education-header {
+    border-bottom: 2px dashed #ddd;
+    padding-bottom: 5px;
+    margin-bottom: 25px;
+}
+
+.single-education {
+    margin-bottom: 30px;
+}
+
+.header-top-area {
+    background: #fff;
+    padding: 25px 50px;
+    margin-bottom: 50px;
+}
+
+.back-btn a {
+    color: #fff;
+    text-decoration: none;
+    background: #4a22ea;
+    padding: 11px 25px;
+    border-radius: 5px;
+}
+
+.header-download-btn button {
+    border: 2px solid #571bfd;
+    padding: 9px 24px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    color: #571bfd;
+    font-weight: 500;
+    font-size: 16px;
+    background: transparent;
+}
+
+.header-download-btn button svg {
+    padding-right: 5px;
+    font-size: 24px;
+}
+
