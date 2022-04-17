@@ -15,7 +15,7 @@
         "anandsiddharth/laravel-paytm-wallet": "^1.0",
         "anhskohbo/no-captcha": "^3.1",
         "barryvdh/laravel-dompdf": "^1.0.0",
-        "caouecs/laravel-lang": "~4.0",
+        "caouecs/laravel-lang": "~7.0",
         "cartalyst/stripe-laravel": "13.*",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.4",
