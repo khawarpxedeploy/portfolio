@@ -1,0 +1,609 @@
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: aliceblue;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+select {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+input {
+    border: 1px dashed #969494;
+    border-radius: 5px;
+    padding: 5px 5px;
+}
+
+input:focus {
+    outline: 0;
+}
+
+textarea {
+    width: 100%;
+    height: 100%;
+    border: 1px dashed #969494;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #545454;
+    font-weight: 400;
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+textarea:focus {
+    outline: 0;
+}
+
+
+/* header */
+
+.header-user-info img {
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    border-radius: 54px;
+}
+
+.header-area {
+    background: #fff;
+    padding: 25px 0;
+}
+
+.back-btn a {
+    color: #fff;
+    text-decoration: none;
+    background: #4a22ea;
+    padding: 11px 25px;
+    border-radius: 5px;
+}
+
+.menu-header span {
+    color: #909090;
+    font-weight: 500;
+    font-size: .6875rem;
+    text-transform: uppercase;
+    letter-spacing: .50px;
+}
+
+.menu-header {
+    margin-bottom: 5px;
+}
+
+.header-menu {
+    border-left: 1px solid #ddd;
+    padding-left: 30px;
+    border-right: 1px solid #ddd;
+    padding-right: 30px;
+}
+
+.theme-name h5 {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.theme-name h5 span.name {
+    margin-left: 5px;
+}
+
+.custom-select {
+    position: relative;
+}
+
+.custom-select svg {
+    position: absolute;
+    top: 50%;
+    font-size: 22px;
+    transform: translateY(-50%) !important;
+}
+
+.custom-select select {
+    background: none !important;
+    border: none !important;
+    font-size: 22px;
+    font-weight: 700;
+    padding-left: 25px;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: -4px;
+}
+
+.custom-select select:focus {
+    outline: 0;
+    box-shadow: none;
+}
+
+.header-btn a {
+    margin-right: 20px;
+    background: #501ff3;
+    color: #fff;
+    text-decoration: none;
+    padding: 11px 25px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.header-btn a svg {
+    font-size: 21px;
+    margin-right: 5px;
+}
+
+.header-user-info a {
+    text-decoration: none;
+    color: #444242;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.header-user-info a img {
+    margin-right: 5px;
+}
+
+.theme-name a {
+    text-decoration: none;
+    color: #333;
+}
+
+
+/* main container */
+
+.resume-main-area {
+    background: #fff;
+    border-radius: 5px;
+}
+
+.p-30 {
+    padding: 30px 30px;
+}
+
+.resume-logo img {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    border-radius: 100px;
+}
+
+.resume-user-name input {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: 700;
+    font-size: 32px;
+    font-family: 'Cormorant Garamond', serif;
+    margin-bottom: 10px;
+}
+
+.resume-position input {
+    text-align: center;
+    padding: 8px 20px;
+    color: #313131;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.resume-card-section {
+    margin-top: 50px;
+}
+
+.resume-card-header h4 {
+    font-weight: 700;
+    font-size: 32px;
+}
+
+.paragraph-textarea textarea {
+    min-height: 170px;
+}
+
+.resume-add-more-btn span {
+    background: #571bfd;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: 300;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.resume-text-content input {
+    width: 100%;
+    padding: 12px 16px;
+    color: #3a3939;
+    font-size: 15px;
+}
+
+.resume-contact-select-area {
+    margin-bottom: 10px;
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.resume-contact-select-area select {
+    border: 1px dashed #969494;
+    height: 47px;
+    padding: 0 16px;
+    color: #333;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.resume-contact-select-area .cv-field-remove {
+    background: #fb4a4a;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+.resume-text-content {
+    width: 100%;
+}
+
+.resume-left-area {
+    border-right: 1px solid #ddd;
+    padding-right: 25px;
+}
+
+.resume-right-area {
+    padding-left: 25px;
+}
+
+.resume-text-content textarea {
+    min-height: 160px;
+}
+
+.header-download-btn a {
+    border: 2px solid #571bfd;
+    padding: 9px 24px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    color: #571bfd;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.header-download-btn a svg {
+    font-weight: 700;
+    margin-right: 5px;
+    font-size: 18px;
+}
+
+.resume-contact-select-area select:focus {
+    box-shadow: none;
+    border: 1px dashed #969494;
+}
+
+.footer-content p {
+    color: #666;
+    font-size: 17px;
+    font-weight: 300;
+}
+
+.footer-content p a {
+    color: #ff3140;
+    font-weight: 500;
+}
+
+
+/* CV BUILDER PAGE - Rabby */
+
+ul.toolbar li {
+    margin-right: 20px;
+}
+
+.cv-image {
+    /* width: 150px; */
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.cv-field {
+    padding: 5px;
+    font-size: 13px;
+}
+
+.customHeader {
+    font-size: 16px;
+    padding: 5px;
+}
+
+.cv-field::hover {
+    outline: 2px black;
+}
+
+.cv-field::before {
+    content: attr(data-placeholder);
+}
+
+.cv-field-textarea::before {
+    content: attr(data-placeholder);
+}
+
+.clear-content::before {
+    content: none !important;
+}
+
+.cv-field-add,
+.cv-field-remove,
+.cv-field-add-more {
+    cursor: pointer;
+}
+
+.select {
+    position: relative;
+}
+
+.select .custom-select {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    cursor: pointer;
+}
+
+.themes {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    width: 100%;
+    top: 100px;
+    background-color: #fff;
+    box-shadow: 0 0 0 0;
+    visibility: hidden;
+}
+
+.themes.show {
+    visibility: visible;
+}
+
+.themes .navbar-nav {
+    flex-direction: row;
+}
+
+.themes .navbar-nav li .card {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 12px;
+}
+
+.theme-preview img {
+    width: 150px;
+}
+
+.theme-preview.active {
+    background: #501ff2;
+}
+
+.theme-preview {
+    padding: 12px;
+    margin: 0;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.selected-item.theme {
+    cursor: pointer;
+}
+
+.customHeader {
+    width: 100px;
+}
+
+ul.timeline {
+    list-style-type: none;
+    position: relative;
+    padding: 0;
+}
+
+ul.timeline:before {
+    content: ' ';
+    background: #d4d9df;
+    display: inline-block;
+    position: absolute;
+    left: 7px;
+    width: 2px;
+    height: 100%;
+    z-index: 1;
+}
+
+ul.timeline>li {
+    margin: 15px 0 20px 22px;
+}
+
+ul.timeline>li:before {
+    content: ' ';
+    background: #444;
+    display: inline-block;
+    position: absolute;
+    border-radius: 50%;
+    left: 2px;
+    width: 10px;
+    height: 10px;
+    z-index: 1;
+}
+
+.cv-field.textarea {
+    height: 100px;
+    overflow-y: scroll;
+    visibility: hidden;
+}
+
+.jobduration .cv-field {
+    width: 60%;
+}
+
+.jobtype {
+    position: relative;
+    width: 100%;
+}
+
+#resetform {
+    cursor: pointer;
+}
+
+.customHeader {
+    font-size: 25px;
+    border: 1px solid transparent;
+    font-family: 'Cormorant Garamond', serif;
+    color: #333;
+    font-weight: 700;
+    width: 65%;
+}
+
+.customHeader:focus {
+    border: 1px dashed #969494;
+}
+
+.education-body textarea {
+    font-size: 15px;
+    padding: 11px 15px;
+}
+
+.info-body textarea {
+    font-size: 15px;
+    padding: 11px 15px;
+}
+
+.customcvselect {
+    font-size: 14px;
+    height: 100%;
+}
+
+.select {
+    cursor: pointer;
+}
+
+.selected-item.theme span,
+.selected-item.theme i {
+    pointer-events: none;
+}
+
+#color-picker {
+    visibility: hidden;
+    position: absolute;
+    top: 25%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+}
+
+.cv-savebtn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
+#cvform {
+    position: relative;
+}
+
+.loader {
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+}
+
+.cvbutton-disabled {
+    position: relative;
+}
+
+.cvbutton-disabled a {
+    pointer-events: none;
+    color: #111;
+}
+
+.cvbutton-disabled a svg {
+    font-size: 18px;
+    padding-right: 3px;
+    color: #777474;
+}
+
+.cvbutton-disabled a {
+    background: #dcdcdc;
+    color: #777474;
+    border-color: #dcdcdc;
+}
+
+.image-container {
+    position: relative;
+}
+
+.image-container:hover::before {
+    opacity: 1;
+}
+
+.image-container::before {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    font-size: 35px;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f030";
+    color: #fff;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 300ms ease;
+    pointer-events: none;
+}
+
+.cv-image {
+    cursor: pointer;
+    position: relative;
+}
+
+#profile-image {
+    visibility: hidden;
+    height: 0;
+    margin: 0;
+}
+
+.card.single-theme {
+    border: none;
+    box-shadow: 0 0 20px #ddd !important;
+    border-radius: 10px !important;
+    padding: 0 !important;
+}
+
+.card.single-theme img {
+    height: 175px;
+    border-radius: 5px;
+}
+
+.cv-theme-section {
+    margin-left: 30px !important;
+    margin-bottom: 15px !important;
+}
+
+.theme_name {
+    color: #4c4949;
+    margin-top: 10px;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.theme-preview.active .theme_name {
+    color: #fff;
+}
+
+.resume-area {
+    min-height: 100vh;
+}

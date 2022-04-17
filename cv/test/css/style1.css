@@ -1,0 +1,156 @@
+
+
+body {
+    background: bisque;
+    font-family: 'Jost', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+.cv-templates-area {
+    background: #fff;
+}
+
+.sidebar-section {
+    background: #313A4A;
+    height: 100%;
+}
+
+.user-info {
+    padding-top: 50px;
+}
+
+.user-name h2 {
+    color: #fff;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    line-height: 1.6;
+}
+
+.user-name h2 span {
+    color: #9B8657;
+    font-weight: 700;
+}
+
+.user-position p {
+    color: #cecece;
+    margin-bottom: 35px;
+    font-size: 18px;
+}
+
+.user-img img {
+    border-radius: 200px;
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    margin-bottom: 40px;
+}
+
+.sidebar-card-header h4 {
+    color: #9b8657;
+    font-weight: 400;
+    letter-spacing: 5px;
+    margin-bottom: 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.sidebar-card-header {
+    border-top: 1px solid #655940;
+    border-bottom: 1px solid #655940;
+}
+
+.sidebar-card-body {
+    margin-top: 25px;
+    margin-left: 35px;
+}
+
+.education-main-area {
+    padding-bottom: 20px;
+}
+
+.education-title h6 {
+    color: #fff;
+    font-weight: 400;
+    font-size: 17px;
+}
+
+.university-name p {
+    color: #9b8657;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.university-year span {
+    color: #bbb;
+    font-size: 15px;
+}
+
+.sidebar-card {
+    padding-bottom: 30px;
+}
+
+.skill-lists ul li {
+    color: #b9b9b9;
+    margin-bottom: 15px;
+    font-size: 17px;
+}
+
+.resume-card {
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 40px;
+    margin-bottom: 60px;
+}
+
+.resume-card-header {
+    text-align: center;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+}
+
+.resume-card-header h4 {
+    text-transform: capitalize;
+    letter-spacing: 5px;
+}
+
+.resume-card-header h4 {
+    margin-bottom: 0;
+}
+
+.resume-card-body {
+    margin-top: 20px;
+}
+
+.resume-card-body p {
+    color: #666;
+    line-height: 1.9;
+    font-size: 16px;
+}
+
+.resume-table tr td {
+    border-color: #fbc858;
+    padding: 15px 30px;
+}
+
+.resume-table tr {
+    border-color: #fbc858;
+}
+
+.resume-table {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.resume-table tr td svg {
+    color: #caa656;
+    margin-right: 5px;
+}
+
+.resume-table tr td {
+    color: #666;
+}
