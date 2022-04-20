@@ -18,7 +18,7 @@ class CronJobController extends Controller
         $be = BasicExtended::first();
 
 
-        $exMembers = Membership::whereDate('expire_date', Carbon::now()->subDays(1))->get();
+        $exMembers = Membership::whereDate('expire_date', Carbon::now()->subDays(1))->where('modified', '<>', 1)->get();
         foreach ($exMembers as $key => $exMember) {
             if (!empty($exMember->user)) {
                 $user = $exMember->user;
@@ -38,7 +38,7 @@ class CronJobController extends Controller
                 $nextPackageCount = Membership::query()->where([
                     ['user_id', $user->id],
                     ['start_date', '>', Carbon::now()->toDateString()]
-                ])->where('status', '<>', 2)->count();
+                ])->where('status', '<>', 2)->whereYear('start_date', '<>', '9999')->count();
 
                 if ($nextPackageCount == 0) {
                     SubscriptionReminderMail::dispatch($user, $bs, $be, $rmdMember->expire_date);
@@ -46,6 +46,6 @@ class CronJobController extends Controller
             }
         }
 
-        \Artisan::call("queue:work", ["--stop-when-empty"]);
+        \Artisan::call("queue:work --stop-when-empty");
     }
 }

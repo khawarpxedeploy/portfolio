@@ -36,4 +36,18 @@
 
         reader.readAsDataURL(file);
     })
+
+    let fd = new FormData();
+    $(".image-cross-btn").on('click', function() {
+        $.post(imageRemoveRoute, {
+            langId: langId,
+            userId: userId,
+            type: $(this).data('type')
+        },
+        function(data) {
+            if (data == "success") {
+                location.reload();
+            }
+        })
+    });
 })(jQuery); 

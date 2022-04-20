@@ -45,9 +45,6 @@
                     <div class="hero-img text-right">
                         @if(isset($home_text->hero_image))
                         <img data-src="{{asset('assets/front/img/user/home_settings/'.$home_text->hero_image)}}" class="animate-float-bob-y lazy" alt="">
-                        @else
-                        <img data-src="{{asset('assets/admin/img/propics/blank_user.jpg')}}" alt="..."
-                            class="animate-float-bob-y lazy">
                         @endif
                     </div>
                 </div>
@@ -190,7 +187,7 @@
                                     @if (!empty($education->end_date))
                                         {{ \Carbon\Carbon::parse($education->end_date)->format('M j, Y') }}
                                     @else
-                                        Present
+                                        {{$keywords["Present"] ?? "Present"}}
                                     @endif
                                 </span>
                                 <p>{!! nl2br($education->short_description) !!}</p>
@@ -208,8 +205,15 @@
                             <div class="experience-list">
                                 @foreach($job_experiences as $job_experience)
                                     <div class="single-experience">
-                                        <h5 class="title">{{$job_experience->designation}}</h5>
-                                        <span class="duration">{{\Carbon\Carbon::parse($job_experience->start_date)->format('M j, Y')}} - {{ $job_experience->is_continue == 0 ? \Carbon\Carbon::parse($job_experience->end_date)->format('M j, Y') : "Present"}}</span>
+                                        <h5 class="title">{{$job_experience->designation}} [{{$job_experience->company_name}}]</h5>
+                                        <span class="duration">
+                                            {{\Carbon\Carbon::parse($job_experience->start_date)->format('M j, Y')}} - 
+                                            @if ($job_experience->is_continue == 0)
+                                            {{ \Carbon\Carbon::parse($job_experience->end_date)->format('M j, Y') }}
+                                            @else
+                                            {{$keywords["Present"] ?? "Present"}}
+                                            @endif
+                                        </span>
                                         <p>{!! nl2br($job_experience->content) !!}</p>
                                     </div>
                                 @endforeach

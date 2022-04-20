@@ -190,11 +190,16 @@ class VcardController extends Controller
             'name' => 'nullable|max:255',
             'occupation' => 'nullable|max:255',
             'profile_image' => [
+                'required',
                 function ($attribute, $value, $fail) use ($profileImg, $allowedExts) {
                     if (!empty($profileImg)) {
                         $ext = $profileImg->getClientOriginalExtension();
                         if (!in_array($ext, $allowedExts)) {
                             return $fail("Only png, jpg, jpeg image is allowed");
+                        }
+                        $size = $profileImg->getSize();
+                        if ($size > 200000) {
+                            return $fail("Image size cannot be greater than 200 KB");
                         }
                     }
                 },
@@ -306,6 +311,10 @@ class VcardController extends Controller
                         $ext = $profileImg->getClientOriginalExtension();
                         if (!in_array($ext, $allowedExts)) {
                             return $fail("Only png, jpg, jpeg image is allowed");
+                        }
+                        $size = $profileImg->getSize();
+                        if ($size > 200000) {
+                            return $fail("Image size cannot be greater than 200 KB");
                         }
                     }
                 },
@@ -800,15 +809,23 @@ class VcardController extends Controller
         }
 
         $vcard->base_color = $request->base_color;
-        $vcard->call_button_color = $request->call_button_color;
-        $vcard->whatsapp_button_color = $request->whatsapp_button_color;
-        $vcard->mail_button_color = $request->mail_button_color;
-        $vcard->add_to_contact_button_color = $request->add_to_contact_button_color;
-        $vcard->share_vcard_button_color = $request->share_vcard_button_color;
-        $vcard->phone_icon_color = $request->phone_icon_color;
-        $vcard->email_icon_color = $request->email_icon_color;
-        $vcard->address_icon_color = $request->address_icon_color;
-        $vcard->website_url_icon_color = $request->website_url_icon_color;
+
+        if ($vcard->template == 6) {
+            $vcard->summary_background_color = $request->summary_background_color;
+        }
+
+        if ($vcard->template != 5 && $vcard->template != 6 && $vcard->template != 9 && $vcard->template != 10) {
+            $vcard->call_button_color = $request->call_button_color;
+            $vcard->whatsapp_button_color = $request->whatsapp_button_color;
+            $vcard->mail_button_color = $request->mail_button_color;
+            $vcard->add_to_contact_button_color = $request->add_to_contact_button_color;
+            $vcard->share_vcard_button_color = $request->share_vcard_button_color;
+            $vcard->phone_icon_color = $request->phone_icon_color;
+            $vcard->email_icon_color = $request->email_icon_color;
+            $vcard->address_icon_color = $request->address_icon_color;
+            $vcard->website_url_icon_color = $request->website_url_icon_color;
+        }
+
         $vcard->save();
 
         $request->session()->flash('success', 'Colors updated successfully');

@@ -162,11 +162,13 @@ $permissions = json_decode($permissions, true);
                                 <span class="sub-item">Favicon</span>
                                 </a>
                             </li>
+                            @if ($userBs->theme != 5)
                             <li class="@if(request()->path() == 'user/logo') active @endif">
                                 <a href="{{route('user.logo')}}">
                                 <span class="sub-item">Logo</span>
                                 </a>
                             </li>
+                            @endif
                             <li class="@if(request()->path() == 'user/preloader') active @endif">
                                 <a href="{{route('user.preloader')}}">
                                 <span class="sub-item">Preloader</span>
@@ -199,113 +201,6 @@ $permissions = json_decode($permissions, true);
                 </li>
                 @endif
 
-
-
-                @if (!empty($permissions) && in_array('QR Builder', $permissions))
-                <li class="nav-item
-                    @if(request()->routeIs('user.qrcode')) active
-                    @elseif(request()->routeIs('user.qrcode.index')) active
-                    @endif">
-                    <a data-toggle="collapse" href="#qrcode">
-                        <i class="fas fa-qrcode"></i>
-                        <p>QR Codes</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse
-                        @if(request()->routeIs('user.qrcode')) show
-                        @elseif(request()->routeIs('user.qrcode.index')) show
-                        @endif" id="qrcode">
-                        <ul class="nav nav-collapse">
-                            <li class="@if(request()->routeIs('user.qrcode')) active
-                            @endif">
-                                <a href="{{route('user.qrcode')}}">
-                                    <span class="sub-item">Generate QR Code</span>
-                                </a>
-                            </li>
-                            <li class="@if(request()->routeIs('user.qrcode.index')) active @endif">
-                                <a href="{{route('user.qrcode.index')}}">
-                                <span class="sub-item">Saved QR Codes</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                @endif
-
-
-
-                @if (!empty($permissions) && in_array('vCard', $permissions))
-                <li class="nav-item
-                    @if(request()->path() == 'user/vcard') active
-                    @elseif(request()->path() == 'user/vcard/create') active
-                    @elseif(request()->is('user/vcard/*/edit')) active
-                    @elseif(request()->routeIs('user.vcard.services')) active
-                    @elseif(request()->routeIs('user.vcard.projects')) active
-                    @elseif(request()->routeIs('user.vcard.testimonials')) active
-                    @elseif(request()->routeIs('user.vcard.about')) active
-                    @elseif(request()->routeIs('user.vcard.preferences')) active
-                    @elseif(request()->routeIs('user.vcard.color')) active
-                    @elseif(request()->routeIs('user.vcard.keywords')) active
-                    @endif">
-                    <a data-toggle="collapse" href="#vcard">
-                        <i class="far fa-address-card"></i>
-                        <p>vCards Management</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse
-                        @if(request()->path() == 'user/vcard') show
-                        @elseif(request()->path() == 'user/vcard/create') show
-                        @elseif(request()->is('user/vcard/*/edit')) show
-                        @elseif(request()->routeIs('user.vcard.services')) show
-                        @elseif(request()->routeIs('user.vcard.projects')) show
-                        @elseif(request()->routeIs('user.vcard.testimonials')) show
-                        @elseif(request()->routeIs('user.vcard.about')) show
-                        @elseif(request()->routeIs('user.vcard.preferences')) show
-                        @elseif(request()->routeIs('user.vcard.color')) show
-                        @elseif(request()->routeIs('user.vcard.keywords')) show
-                        @endif" id="vcard">
-                        <ul class="nav nav-collapse">
-                            <li class="@if(request()->path() == 'user/vcard') active
-                            @elseif(request()->is('user/vcard/*/edit')) active 
-                            @elseif(request()->routeIs('user.vcard.services')) active
-                            @elseif(request()->routeIs('user.vcard.projects')) active
-                            @elseif(request()->routeIs('user.vcard.testimonials')) active
-                            @elseif(request()->routeIs('user.vcard.about')) active
-                            @elseif(request()->routeIs('user.vcard.preferences')) active
-                            @elseif(request()->routeIs('user.vcard.color')) active
-                            @elseif(request()->routeIs('user.vcard.keywords')) active
-                            @endif">
-                                <a href="{{route('user.vcard')}}">
-                                    <span class="sub-item">vCards</span>
-                                </a>
-                            </li>
-                            <li class="@if(request()->path() == 'user/vcard/create') active @endif">
-                                <a href="{{route('user.vcard.create')}}">
-                                <span class="sub-item">Add vCard</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                @endif
-
-
-                @if (!empty($permissions) && in_array('Online CV & Export', $permissions))
-                <li class="nav-item
-                    @if(request()->path() == 'user/cv') active
-                    @elseif(request()->routeIs('user.cv.edit')) active
-                    @elseif(request()->routeIs('user.cv.info')) active
-                    @elseif(request()->routeIs('user.cv.section.index')) active
-                    @elseif(request()->routeIs('user.cv.section.edit')) active
-                    @elseif(request()->routeIs('user.cv.section.content')) active
-                    @endif">
-                    <a href="{{route('user.cv')}}">
-                        <i class="far fa-file"></i>
-                        <p>CVs Management</p>
-                    </a>
-                </li>
-                @endif
-
                 @if(!is_null($package))
                 <li class="nav-item @if(request()->path() == 'user/home-page-text/edit') active @endif">
                     <a href="{{route('user.home.page.text.edit', ['language' => $default->code])}}">
@@ -325,16 +220,18 @@ $permissions = json_decode($permissions, true);
                 @endif
 
 
-                @if (!empty($permissions) && in_array('Skill', $permissions))
-                <li class="nav-item
-                    @if(request()->path() == 'user/skills') active
-                    @elseif(request()->is('user/skill/*/edit')) active
-                    @endif">
-                    <a href="{{route('user.skill.index').'?language='.$default->code}}">
-                        <i class="fas fa-pencil-ruler"></i>
-                        <p>Skills</p>
-                    </a>
-                </li>
+                @if ($userBs->theme != 3)
+                    @if (!empty($permissions) && in_array('Skill', $permissions))
+                    <li class="nav-item
+                        @if(request()->path() == 'user/skills') active
+                        @elseif(request()->is('user/skill/*/edit')) active
+                        @endif">
+                        <a href="{{route('user.skill.index').'?language='.$default->code}}">
+                            <i class="fas fa-pencil-ruler"></i>
+                            <p>Skills</p>
+                        </a>
+                    </li>
+                    @endif
                 @endif
 
                 @if (!empty($permissions) && in_array('Service', $permissions))
@@ -479,6 +376,113 @@ $permissions = json_decode($permissions, true);
                             </li>
                         </ul>
                     </div>
+                </li>
+                @endif
+
+
+
+                @if (!empty($permissions) && in_array('QR Builder', $permissions))
+                <li class="nav-item
+                    @if(request()->routeIs('user.qrcode')) active
+                    @elseif(request()->routeIs('user.qrcode.index')) active
+                    @endif">
+                    <a data-toggle="collapse" href="#qrcode">
+                        <i class="fas fa-qrcode"></i>
+                        <p>QR Codes</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse
+                        @if(request()->routeIs('user.qrcode')) show
+                        @elseif(request()->routeIs('user.qrcode.index')) show
+                        @endif" id="qrcode">
+                        <ul class="nav nav-collapse">
+                            <li class="@if(request()->routeIs('user.qrcode')) active
+                            @endif">
+                                <a href="{{route('user.qrcode')}}">
+                                    <span class="sub-item">Generate QR Code</span>
+                                </a>
+                            </li>
+                            <li class="@if(request()->routeIs('user.qrcode.index')) active @endif">
+                                <a href="{{route('user.qrcode.index')}}">
+                                <span class="sub-item">Saved QR Codes</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+
+
+                @if (!empty($permissions) && in_array('vCard', $permissions))
+                <li class="nav-item
+                    @if(request()->path() == 'user/vcard') active
+                    @elseif(request()->path() == 'user/vcard/create') active
+                    @elseif(request()->is('user/vcard/*/edit')) active
+                    @elseif(request()->routeIs('user.vcard.services')) active
+                    @elseif(request()->routeIs('user.vcard.projects')) active
+                    @elseif(request()->routeIs('user.vcard.testimonials')) active
+                    @elseif(request()->routeIs('user.vcard.about')) active
+                    @elseif(request()->routeIs('user.vcard.preferences')) active
+                    @elseif(request()->routeIs('user.vcard.color')) active
+                    @elseif(request()->routeIs('user.vcard.keywords')) active
+                    @endif">
+                    <a data-toggle="collapse" href="#vcard">
+                        <i class="far fa-address-card"></i>
+                        <p>vCards Management</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse
+                        @if(request()->path() == 'user/vcard') show
+                        @elseif(request()->path() == 'user/vcard/create') show
+                        @elseif(request()->is('user/vcard/*/edit')) show
+                        @elseif(request()->routeIs('user.vcard.services')) show
+                        @elseif(request()->routeIs('user.vcard.projects')) show
+                        @elseif(request()->routeIs('user.vcard.testimonials')) show
+                        @elseif(request()->routeIs('user.vcard.about')) show
+                        @elseif(request()->routeIs('user.vcard.preferences')) show
+                        @elseif(request()->routeIs('user.vcard.color')) show
+                        @elseif(request()->routeIs('user.vcard.keywords')) show
+                        @endif" id="vcard">
+                        <ul class="nav nav-collapse">
+                            <li class="@if(request()->path() == 'user/vcard') active
+                            @elseif(request()->is('user/vcard/*/edit')) active 
+                            @elseif(request()->routeIs('user.vcard.services')) active
+                            @elseif(request()->routeIs('user.vcard.projects')) active
+                            @elseif(request()->routeIs('user.vcard.testimonials')) active
+                            @elseif(request()->routeIs('user.vcard.about')) active
+                            @elseif(request()->routeIs('user.vcard.preferences')) active
+                            @elseif(request()->routeIs('user.vcard.color')) active
+                            @elseif(request()->routeIs('user.vcard.keywords')) active
+                            @endif">
+                                <a href="{{route('user.vcard')}}">
+                                    <span class="sub-item">vCards</span>
+                                </a>
+                            </li>
+                            <li class="@if(request()->path() == 'user/vcard/create') active @endif">
+                                <a href="{{route('user.vcard.create')}}">
+                                <span class="sub-item">Add vCard</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+
+                @if (!empty($permissions) && in_array('Online CV & Export', $permissions))
+                <li class="nav-item
+                    @if(request()->path() == 'user/cv') active
+                    @elseif(request()->routeIs('user.cv.edit')) active
+                    @elseif(request()->routeIs('user.cv.info')) active
+                    @elseif(request()->routeIs('user.cv.section.index')) active
+                    @elseif(request()->routeIs('user.cv.section.edit')) active
+                    @elseif(request()->routeIs('user.cv.section.content')) active
+                    @endif">
+                    <a href="{{route('user.cv')}}">
+                        <i class="far fa-file"></i>
+                        <p>CVs Management</p>
+                    </a>
                 </li>
                 @endif
 

@@ -134,6 +134,30 @@
     </section><!--====== End saas-project section ======-->
     @endif
 
+    @if ($bs->templates_section == 1)
+    <section class="saas-features pt-120">
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-6">
+                    <div class="section-title-one mb-55">
+                        <span class="span">{{$bs->preview_templates_title}}</span>
+                        <h2>{{$bs->preview_templates_subtitle}}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @foreach ($templates as $template)
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <a class="d-block features-item mb-40 p-0" href="{{detailsUrl($template)}}" target="_blank">
+                            <img src="{{asset('assets/front/img/template-previews/' . $template->template_img)}}" alt="" class="w-100 lazy">
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     @if ($bs->featured_users_section == 1) 
     <!--====== Start saas-featured-users section ======-->
     <section class="saas-featured-users pt-120 pb-120">

@@ -18,6 +18,12 @@ class MegaMailer {
         if (array_key_exists('username', $data)) {
             $body = preg_replace("/{username}/", $data['username'], $body);
         }
+        if (array_key_exists('replaced_package', $data)) {
+            $body = preg_replace("/{replaced_package}/", $data['replaced_package'], $body);
+        }
+        if (array_key_exists('removed_package_title', $data)) {
+            $body = preg_replace("/{removed_package_title}/", $data['removed_package_title'], $body);
+        }
         if (array_key_exists('package_title', $data)) {
             $body = preg_replace("/{package_title}/", $data['package_title'], $body);
         }
@@ -67,6 +73,7 @@ class MegaMailer {
         $be = $currentLang->basic_extended;
 
         $mail = new PHPMailer(true);
+        $mail->CharSet = 'UTF-8';
 
 
         if ($be->is_smtp == 1) {

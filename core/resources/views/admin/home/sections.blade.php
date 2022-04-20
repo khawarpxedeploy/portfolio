@@ -88,6 +88,20 @@
                             </div>
 
                             <div class="form-group">
+                                <label>{{__('Preview Templates Section')}} **</label>
+                                <div class="selectgroup w-100">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="templates_section" value="1" class="selectgroup-input" {{$abs->templates_section == 1 ? 'checked' : ''}}>
+                                        <span class="selectgroup-button">{{__('Active')}}</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="templates_section" value="0" class="selectgroup-input" {{$abs->templates_section == 0 ? 'checked' : ''}}>
+                                        <span class="selectgroup-button">{{__('Deactive')}}</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label>Featured Users Section **</label>
                                 <div class="selectgroup w-100">
                                     <label class="selectgroup-item">

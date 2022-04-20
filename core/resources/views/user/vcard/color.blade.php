@@ -54,60 +54,72 @@
                                             <input type="text" class="form-control jscolor" name="base_color" value="{{$vcard->base_color}}">
                                         </div>
                                     </div>
+
+                                    @if ($vcard->template == 6)    
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label for="">Call Button Color **</label>
-                                            <input type="text" class="form-control jscolor" name="call_button_color" value="{{$vcard->call_button_color}}">
+                                            <label for="">Summary Section Background Color **</label>
+                                            <input type="text" class="form-control jscolor" name="summary_background_color" value="{{$vcard->summary_background_color}}">
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label for="">Whatsapp Button Color **</label>
-                                            <input type="text" class="form-control jscolor" name="whatsapp_button_color" value="{{$vcard->whatsapp_button_color}}">
+                                    @endif
+
+                                    @if ($vcard->template != 5 && $vcard->template != 6 && $vcard->template != 9 && $vcard->template != 10)    
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">Call Button Color **</label>
+                                                <input type="text" class="form-control jscolor" name="call_button_color" value="{{$vcard->call_button_color}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label for="">Mail Button Color **</label>
-                                            <input type="text" class="form-control jscolor" name="mail_button_color" value="{{$vcard->mail_button_color}}">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">Whatsapp Button Color **</label>
+                                                <input type="text" class="form-control jscolor" name="whatsapp_button_color" value="{{$vcard->whatsapp_button_color}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label for="">'Add to Contact' Button Color **</label>
-                                            <input type="text" class="form-control jscolor" name="add_to_contact_button_color" value="{{$vcard->add_to_contact_button_color}}">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">Mail Button Color **</label>
+                                                <input type="text" class="form-control jscolor" name="mail_button_color" value="{{$vcard->mail_button_color}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label for="">'Share vCard' Button Color **</label>
-                                            <input type="text" class="form-control jscolor" name="share_vcard_button_color" value="{{$vcard->share_vcard_button_color}}">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">'Add to Contact' Button Color **</label>
+                                                <input type="text" class="form-control jscolor" name="add_to_contact_button_color" value="{{$vcard->add_to_contact_button_color}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label for="">Phone Icon Color **</label>
-                                            <input type="text" class="form-control jscolor" name="phone_icon_color" value="{{$vcard->phone_icon_color}}">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">'Share vCard' Button Color **</label>
+                                                <input type="text" class="form-control jscolor" name="share_vcard_button_color" value="{{$vcard->share_vcard_button_color}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label for="">Email Icon Color **</label>
-                                            <input type="text" class="form-control jscolor" name="email_icon_color" value="{{$vcard->email_icon_color}}">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">Phone Icon Color **</label>
+                                                <input type="text" class="form-control jscolor" name="phone_icon_color" value="{{$vcard->phone_icon_color}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label for="">Address Icon Color **</label>
-                                            <input type="text" class="form-control jscolor" name="address_icon_color" value="{{$vcard->address_icon_color}}">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">Email Icon Color **</label>
+                                                <input type="text" class="form-control jscolor" name="email_icon_color" value="{{$vcard->email_icon_color}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label for="">Website URL Color **</label>
-                                            <input type="text" class="form-control jscolor" name="website_url_icon_color" value="{{$vcard->website_url_icon_color}}">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">Address Icon Color **</label>
+                                                <input type="text" class="form-control jscolor" name="address_icon_color" value="{{$vcard->address_icon_color}}">
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">Website URL Color **</label>
+                                                <input type="text" class="form-control jscolor" name="website_url_icon_color" value="{{$vcard->website_url_icon_color}}">
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                             </form>
                         </div>

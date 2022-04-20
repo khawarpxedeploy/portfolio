@@ -2,6 +2,12 @@
 
 $domain = env('WEBSITE_HOST');
 
+if (!app()->runningInConsole()) {
+    if (substr($_SERVER['HTTP_HOST'], 0, 4) === 'www.') {
+        $domain = 'www.' . env('WEBSITE_HOST');
+    }
+}
+
 Route::fallback(function () {
     return view('errors.404');
 });
@@ -218,10 +224,12 @@ Route::domain($domain)->group(function() {
 
         Route::get('/cv-upload', 'User\BasicController@cvUpload')->name('user.cv.upload');
         Route::post('/cv-upload/update', 'User\BasicController@updateCV')->name('user.cv.upload.update');
+        Route::post('/cv-upload/delete', 'User\BasicController@deleteCV')->name('user.cv.upload.delete');
 
         // user home page routes
         Route::get('/home-page-text/edit', 'User\BasicController@homePageTextEdit')->name('user.home.page.text.edit');
         Route::post('/home-page-text/update', 'User\BasicController@homePageTextUpdate')->name('user.home.page.text.update');
+        Route::post('/home-image-remove', 'User\BasicController@homeImageRemove')->name('user.home.image.remove');
 
         // user Social routes
         Route::get('/social', 'User\SocialController@index')->name('user.social.index');
@@ -591,8 +599,16 @@ Route::domain($domain)->group(function() {
             Route::post('register/user/store', 'Admin\RegisterUserController@store')->name('register.user.store');
             Route::post('register/users/ban', 'Admin\RegisterUserController@userban')->name('register.user.ban');
             Route::post('register/users/featured', 'Admin\RegisterUserController@userFeatured')->name('register.user.featured');
+            Route::post('register/users/template', 'Admin\RegisterUserController@userTemplate')->name('register.user.template');
+            Route::post('register/users/template/update', 'Admin\RegisterUserController@userUpdateTemplate')->name('register.user.updateTemplate');
             Route::post('register/users/email', 'Admin\RegisterUserController@emailStatus')->name('register.user.email');
             Route::get('register/user/details/{id}', 'Admin\RegisterUserController@view')->name('register.user.view');
+            Route::post('/user/current-package/remove', 'Admin\RegisterUserController@removeCurrPackage')->name('user.currPackage.remove');
+            Route::post('/user/current-package/change', 'Admin\RegisterUserController@changeCurrPackage')->name('user.currPackage.change');
+            Route::post('/user/current-package/add', 'Admin\RegisterUserController@addCurrPackage')->name('user.currPackage.add');
+            Route::post('/user/next-package/remove', 'Admin\RegisterUserController@removeNextPackage')->name('user.nextPackage.remove');
+            Route::post('/user/next-package/change', 'Admin\RegisterUserController@changeNextPackage')->name('user.nextPackage.change');
+            Route::post('/user/next-package/add', 'Admin\RegisterUserController@addNextPackage')->name('user.nextPackage.add');
             Route::post('register/user/delete', 'Admin\RegisterUserController@delete')->name('register.user.delete');
             Route::post('register/user/bulk-delete', 'Admin\RegisterUserController@bulkDelete')->name('register.user.bulk.delete');
             Route::get('register/user/{id}/changePassword', 'Admin\RegisterUserController@changePass')->name('register.user.changePass');
@@ -794,6 +810,7 @@ Route::domain($domain)->group(function() {
 });
 
 
+
 $parsedUrl = parse_url(url()->current());
 // dd($parsedUrl);
 // Output:
@@ -802,22 +819,45 @@ $parsedUrl = parse_url(url()->current());
 //   "host" => "domain.ext"
 //   "path" => "/username"
 // ]
+
+$host = str_replace("www.","",$parsedUrl['host']);
 if (array_key_exists('host', $parsedUrl)) {
     // if it is a path based URL
-    if ($parsedUrl['host'] == env('WEBSITE_HOST')) {
+    if ($host == env('WEBSITE_HOST')) {
         $domain = $domain;
         $prefix = '/{username}';
-    } 
+    }
     // if it is a subdomain / custom domain
     else {
-        $domain = '{domain}';
+        if (!app()->runningInConsole()) {
+            if (substr($_SERVER['HTTP_HOST'], 0, 4) === 'www.') {
+                $domain = 'www.{domain}';
+            } else {
+                $domain = '{domain}';
+            }
+        }
         $prefix = '';
     }
 }
+
 Route::group(['domain' => $domain, 'prefix' => $prefix], function() {
     Route::get('/', 'Front\FrontendController@userDetailView')
     ->name('front.user.detail.view');
-    Route::post('/contact/message', 'Front\FrontendController@contactMessage')->name('front.contact.message');
+
+    Route::get('/about', 'Front\FrontendController@userAbout')->name('front.user.about');
+
+    Route::group(['middleware' => ['routeAccess:Testimonial']], function () {
+        Route::get('/testimonial', 'Front\FrontendController@userTestimonial')->name('front.user.testimonial');
+    });
+
+    Route::group(['middleware' => ['routeAccess:Experience']], function () {
+        Route::get('/experience', 'Front\FrontendController@userExperience')->name('front.user.experience');
+    });
+
+    Route::group(['middleware' => ['routeAccess:Contact']], function () {
+        Route::get('/contact', 'Front\FrontendController@userContact')->name('front.user.contact');
+        Route::post('/contact/message', 'Front\FrontendController@contactMessage')->name('front.contact.message');
+    });
 
     Route::group(['middleware' => ['routeAccess:Service']], function () {
         Route::get('/services', 'Front\FrontendController@userServices')->name('front.user.services');

@@ -73,8 +73,13 @@ $userDefaultLang = \App\Models\User\Language::where([
                             <div class="col-12 mb-2">
                                 <label for="logo"><strong>Hero Section Image</strong></label>
                             </div>
-                            <div class="col-md-12 showHeroImage mb-3">
+                            <div class="showHeroImage mb-3">
                                 <img src="{{$home_setting->hero_image ? asset('assets/front/img/user/home_settings/'.$home_setting->hero_image) : asset('assets/admin/img/noimage.jpg')}}" alt="..." class="img-thumbnail">
+                                @isset($home_setting->hero_image)
+                                    <button class="btn btn-danger btn-sm image-cross-btn" data-type="hero">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                @endisset
                             </div>
                             <input type="hidden" name="types[]" value="hero_image">
                             <input type="file" name="hero_image" id="hero_image" class="form-control ltr">
@@ -156,51 +161,53 @@ $userDefaultLang = \App\Models\User\Language::where([
                       <p id="errabout_content" class="mb-0 text-danger em"></p>
                   </div>
 
-                  @if (!empty($permissions) && in_array('Skill', $permissions))
-                  <div class="row">
-                      <div class="col-12">
-                          <div class="form-group">
-                              <br>
-                              <h3 class="text-warning">Skills Section</h3>
-                              <hr class="border-top">
-                          </div>
-                          <div class="form-group">
-                              <div class="col-12 mb-2">
-                                  <label for="logo"><strong>Skills Image</strong></label>
-                              </div>
-                              <div class="col-md-12 showSkillsImage mb-3">
-                                  <img src="{{$home_setting->skills_image ? asset('assets/front/img/user/home_settings/'.$home_setting->skills_image) : asset('assets/admin/img/noimage.jpg')}}" alt="..." class="img-thumbnail">
-                              </div>
-                              <input type="hidden" name="types[]" value="skills_image">
-                              <input type="file" name="skills_image" id="skills_image" class="form-control ltr">
-                              <p id="errskills_image" class="mb-0 text-danger em"></p>
-                          </div>
-                          <div class="row">
-                              <div class="col-lg-6 pr-0">
-                                <div class="form-group">
-                                    <label for="">Skills Section Title</label>
-                                    <input type="hidden" name="types[]" value="skills_title">
-                                    <input type="text" class="form-control" name="skills_title" placeholder="" value="{{$home_setting->skills_title}}">
-                                    <p id="errskills_title" class="mb-0 text-danger em"></p>
+                  @if ($userBs->theme != 3)
+                    @if (!empty($permissions) && in_array('Skill', $permissions))
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <br>
+                                <h3 class="text-warning">Skills Section</h3>
+                                <hr class="border-top">
+                            </div>
+                            <div class="form-group">
+                                <div class="col-12 mb-2">
+                                    <label for="logo"><strong>Skills Image</strong></label>
                                 </div>
-                              </div>
-                              <div class="col-lg-6 pl-0">
-                                <div class="form-group">
-                                    <label for="">Skills Section Subtitle</label>
-                                    <input type="hidden" name="types[]" value="skills_subtitle">
-                                    <input type="text" class="form-control" name="skills_subtitle" placeholder="" value="{{$home_setting->skills_subtitle}}">
-                                    <p id="errskills_subtitle" class="mb-0 text-danger em"></p>
+                                <div class="col-md-12 showSkillsImage mb-3">
+                                    <img src="{{$home_setting->skills_image ? asset('assets/front/img/user/home_settings/'.$home_setting->skills_image) : asset('assets/admin/img/noimage.jpg')}}" alt="..." class="img-thumbnail">
                                 </div>
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <label for="">Skills Section Content</label>
-                              <input type="hidden" name="types[]" value="skills_content">
-                              <textarea class="form-control" name="skills_content" rows="5" placeholder="" >{{ $home_setting->skills_content }}</textarea>
-                              <p id="errskills_content" class="mb-0 text-danger em"></p>
-                          </div>
-                      </div>
-                  </div>
+                                <input type="hidden" name="types[]" value="skills_image">
+                                <input type="file" name="skills_image" id="skills_image" class="form-control ltr">
+                                <p id="errskills_image" class="mb-0 text-danger em"></p>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 pr-0">
+                                    <div class="form-group">
+                                        <label for="">Skills Section Title</label>
+                                        <input type="hidden" name="types[]" value="skills_title">
+                                        <input type="text" class="form-control" name="skills_title" placeholder="" value="{{$home_setting->skills_title}}">
+                                        <p id="errskills_title" class="mb-0 text-danger em"></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pl-0">
+                                    <div class="form-group">
+                                        <label for="">Skills Section Subtitle</label>
+                                        <input type="hidden" name="types[]" value="skills_subtitle">
+                                        <input type="text" class="form-control" name="skills_subtitle" placeholder="" value="{{$home_setting->skills_subtitle}}">
+                                        <p id="errskills_subtitle" class="mb-0 text-danger em"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Skills Section Content</label>
+                                <input type="hidden" name="types[]" value="skills_content">
+                                <textarea class="form-control" name="skills_content" rows="5" placeholder="" >{{ $home_setting->skills_content }}</textarea>
+                                <p id="errskills_content" class="mb-0 text-danger em"></p>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                   @endif
 
 
@@ -265,45 +272,47 @@ $userDefaultLang = \App\Models\User\Language::where([
                   </div>
                   @endif
 
-                  @if (!empty($permissions) && in_array('Achievements', $permissions))
-                  <div class="row">
-                      <div class="col-12">
-                          <div class="form-group">
-                              <br>
-                              <h3 class="text-warning">Achievements Section</h3>
-                              <hr class="border-top">
-                          </div>
-                          <div class="form-group">
-                              <div class="col-12 mb-2">
-                                  <label for="logo"><strong>Achievements Image</strong></label>
-                              </div>
-                              <div class="col-md-12 showAchievementImage mb-3">
-                                  <img src="{{$home_setting->achievement_image ? asset('assets/front/img/user/home_settings/'.$home_setting->achievement_image) : asset('assets/admin/img/noimage.jpg')}}" alt="..." class="img-thumbnail">
-                              </div>
-                              <input type="hidden" name="types[]" value="achievement_image">
-                              <input type="file" name="achievement_image" id="achievement_image" class="form-control ltr">
-                              <p id="errachievement_image" class="mb-0 text-danger em"></p>
-                          </div>
-                          <div class="row">
-                              <div class="col-lg-6 pr-0">
-                                <div class="form-group">
-                                    <label for="">Achievement Section Title</label>
-                                    <input type="hidden" name="types[]" value="achievement_title">
-                                    <input type="text" class="form-control" name="achievement_title" placeholder="" value="{{$home_setting->achievement_title}}">
-                                    <p id="errachievement_title" class="mb-0 text-danger em"></p>
+                  @if ($userBs->theme != 3)
+                    @if (!empty($permissions) && in_array('Achievements', $permissions))
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <br>
+                                <h3 class="text-warning">Achievements Section</h3>
+                                <hr class="border-top">
+                            </div>
+                            <div class="form-group">
+                                <div class="col-12 mb-2">
+                                    <label for="logo"><strong>Achievements Image</strong></label>
                                 </div>
-                              </div>
-                              <div class="col-lg-6 pl-0">
-                                <div class="form-group">
-                                    <label for="">Achievement Section Subtitle</label>
-                                    <input type="hidden" name="types[]" value="achievement_subtitle">
-                                    <input type="text" class="form-control" name="achievement_subtitle" placeholder="" value="{{$home_setting->achievement_subtitle}}">
-                                    <p id="errachievement_subtitle" class="mb-0 text-danger em"></p>
+                                <div class="col-md-12 showAchievementImage mb-3">
+                                    <img src="{{$home_setting->achievement_image ? asset('assets/front/img/user/home_settings/'.$home_setting->achievement_image) : asset('assets/admin/img/noimage.jpg')}}" alt="..." class="img-thumbnail">
                                 </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+                                <input type="hidden" name="types[]" value="achievement_image">
+                                <input type="file" name="achievement_image" id="achievement_image" class="form-control ltr">
+                                <p id="errachievement_image" class="mb-0 text-danger em"></p>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 pr-0">
+                                    <div class="form-group">
+                                        <label for="">Achievement Section Title</label>
+                                        <input type="hidden" name="types[]" value="achievement_title">
+                                        <input type="text" class="form-control" name="achievement_title" placeholder="" value="{{$home_setting->achievement_title}}">
+                                        <p id="errachievement_title" class="mb-0 text-danger em"></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pl-0">
+                                    <div class="form-group">
+                                        <label for="">Achievement Section Subtitle</label>
+                                        <input type="hidden" name="types[]" value="achievement_subtitle">
+                                        <input type="text" class="form-control" name="achievement_subtitle" placeholder="" value="{{$home_setting->achievement_subtitle}}">
+                                        <p id="errachievement_subtitle" class="mb-0 text-danger em"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                   @endif
 
 
@@ -447,5 +456,10 @@ $userDefaultLang = \App\Models\User\Language::where([
 @endsection
 
 @section('scripts')
-    <script src="{{asset('assets/admin/js/home-sections.js')}}"></script>
+  <script>
+      var imageRemoveRoute = "{{route('user.home.image.remove')}}";
+      var userId = {{Auth::user()->id}};
+      var langId = {{$language->id}};
+  </script>
+  <script src="{{asset('assets/admin/js/home-sections.js')}}"></script>
 @endsection

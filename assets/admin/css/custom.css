@@ -480,3 +480,14 @@ input:checked + .slider:before {
     width: 100%;
     max-width: 100%;
 }
+.showHeroImage {
+    position: relative;
+    display: inline-block;
+}
+
+.showHeroImage .image-cross-btn {
+    position: absolute;
+    top: -15px;
+    right: -18px;
+    border-radius: 50%;
+}

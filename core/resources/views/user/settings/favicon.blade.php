@@ -44,7 +44,9 @@
                         <img src="{{isset($basic_setting->favicon) ? asset('assets/front/img/user/'.$basic_setting->favicon) :  asset('assets/admin/img/noimage.jpg')}}" alt="..." class="img-thumbnail">
                       </div>
                       <input type="file" name="favicon" id="image" class="form-control">
-                      <p id="errfavicon" class="mb-0 text-danger em"></p>
+                      @if ($errors->has('favicon'))
+                      <p id="errfavicon" class="mb-0 text-danger em">{{$errors->first('favicon')}}</p>
+                      @endif
                     </div>
                   </div>
                 </div>

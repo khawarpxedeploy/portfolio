@@ -15,9 +15,28 @@
         <h2 class="pb-2">Welcome back, {{Auth::guard('web')->user()->first_name}} {{Auth::guard('web')->user()->last_name}}!</h2>
     </div>
     @if (is_null($package))
-        <div class="alert alert-warning">
-            Your membership is expired. Please <a href="{{route('user.plan.extend.index')}}">click here</a> to purchase a new package / extend the current package.
-        </div>
+        @php
+            $pendingMemb = \App\Models\Membership::query()->where([
+                ['user_id', '=', Auth::id()],
+                ['status',0]
+            ])->whereYear('start_date', '<>', '9999')->orderBy('id', 'DESC')->first();
+            $pendingPackage = isset($pendingMemb) ? \App\Models\Package::query()->findOrFail($pendingMemb->package_id):null;
+        @endphp
+
+        @if ($pendingPackage)
+            <div class="alert alert-warning">
+                You have requested a package which needs an action (Approval / Rejection) by Admin. You will be notified via mail once an action is taken.
+            </div>
+            <div class="alert alert-warning">
+                <strong>Pending Package: </strong> {{$pendingPackage->title}} 
+                <span class="badge badge-secondary">{{$pendingPackage->term}}</span>
+                <span class="badge badge-warning">Decision Pending</span>
+            </div>
+        @else
+            <div class="alert alert-warning">
+                Your membership is expired. Please purchase a new package / extend the current package.
+            </div>
+        @endif
     @else
         <div class="row justify-content-center align-items-center mb-1">
             <div class="col-12">
@@ -345,14 +364,29 @@
                                                                 <p><strong
                                                                     >Title: </strong>{{$membership->package->title}}
                                                                 </p>
-                                                                <p><strong
-                                                                    >Term: </strong> {{$membership->package->term}}
+                                                                <p><strong>Term: </strong> {{$membership->package->term}}
                                                                 </p>
-                                                                <p><strong >Start
-                                                                    Date: </strong>{{\Illuminate\Support\Carbon::parse($membership->start_date)->format('M-d-Y')}}
+                                                                <p><strong>Start
+                                                                    Date: </strong>
+                                                                    @if (\Illuminate\Support\Carbon::parse($membership->start_date)->format('Y') == '9999')
+                                                                        <span class="badge badge-danger">Never Activated</span>
+                                                                    @else
+                                                                        {{\Illuminate\Support\Carbon::parse($membership->start_date)->format('M-d-Y')}} 
+                                                                    @endif
                                                                 </p>
-                                                                <p><strong >Expire
-                                                                    Date: </strong>{{\Illuminate\Support\Carbon::parse($membership->expire_date)->format('M-d-Y')}}
+                                                                <p><strong>Expire
+                                                                    Date: </strong>
+                                                                    
+                                                                    @if (\Illuminate\Support\Carbon::parse($membership->start_date)->format('Y') == '9999')
+                                                                        -
+                                                                    @else
+                                                                        @if ($membership->modified == 1)
+                                                                            {{\Illuminate\Support\Carbon::parse($membership->expire_date)->addDay()->format('M-d-Y')}}
+                                                                            <span class="badge badge-primary btn-xs">modified by Admin</span>
+                                                                        @else
+                                                                            {{$membership->package->term == 'lifetime' ? 'Lifetime' : \Illuminate\Support\Carbon::parse($membership->expire_date)->format('M-d-Y')}}
+                                                                        @endif
+                                                                    @endif
                                                                 </p>
                                                                 <p>
                                                                     <strong >Purchase Type: </strong>

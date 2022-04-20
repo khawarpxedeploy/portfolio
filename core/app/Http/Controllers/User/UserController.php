@@ -52,30 +52,30 @@ class UserController extends Controller
         $nextPackageCount = Membership::query()->where([
             ['user_id', Auth::id()],
             ['expire_date', '>=', Carbon::now()->toDateString()]
-        ])->where('status', '<>', 2)->count();
+        ])->whereYear('start_date', '<>', '9999')->where('status', '<>', 2)->count();
         //current package
         $data['current_membership'] = Membership::query()->where([
             ['user_id', Auth::id()],
             ['start_date', '<=', Carbon::now()->toDateString()],
             ['expire_date', '>=', Carbon::now()->toDateString()]
-        ])->first();
+        ])->where('status', 1)->whereYear('start_date', '<>', '9999')->first();
         if($data['current_membership']){
             $countCurrMem = Membership::query()->where([
                 ['user_id', Auth::id()],
                 ['start_date', '<=', Carbon::now()->toDateString()],
                 ['expire_date', '>=', Carbon::now()->toDateString()]
-            ])->count();
+            ])->where('status', 1)->whereYear('start_date', '<>', '9999')->count();
             if ($countCurrMem > 1) {
                 $data['next_membership'] = Membership::query()->where([
                     ['user_id', Auth::id()],
                     ['start_date', '<=', Carbon::now()->toDateString()],
                     ['expire_date', '>=', Carbon::now()->toDateString()]
-                ])->where('status', '<>', 2)->orderBy('id', 'DESC')->first();
+                ])->where('status', '<>', 2)->whereYear('start_date', '<>', '9999')->orderBy('id', 'DESC')->first();
             } else {
                 $data['next_membership'] = Membership::query()->where([
                     ['user_id', Auth::id()],
-                    ['start_date', '>', $data['current_membership']->expire_date],
-                ])->where('status', '<>', 2)->first();
+                    ['start_date', '>', $data['current_membership']->expire_date]
+                ])->whereYear('start_date', '<>', '9999')->where('status', '<>', 2)->first();
             }
             $data['next_package'] = $data['next_membership'] ? Package::query()->where('id', $data['next_membership']->package_id)->first() : null;
         }

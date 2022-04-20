@@ -227,6 +227,7 @@
 	<!-- Chart JS -->
 	<script src="{{asset('assets/admin/js/plugin/chart.min.js')}}"></script>
 	<script>
+		var months = @php echo json_encode($months) @endphp;
 		"use strict";
 		var lineChart = document.getElementById('lineChart').getContext('2d');	
 		var myLineChart = new Chart(lineChart, {

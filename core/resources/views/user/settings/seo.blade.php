@@ -107,6 +107,79 @@
                   </div>
                 </div>
 
+                @if ($userBs->theme == 3)
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label>{{ __('Meta Keywords For About Page') }}</label>
+                    <input
+                      class="form-control"
+                      name="about_meta_keywords"
+                      value="{{ $data->about_meta_keywords }}"
+                      placeholder="Enter Meta Keywords"
+                      data-role="tagsinput"
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ __('Meta Description For About Page') }}</label>
+                    <textarea
+                      class="form-control"
+                      name="about_meta_description"
+                      rows="5"
+                      placeholder="Enter Meta Description"
+                    >{{ $data->about_meta_description }}</textarea>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label>{{ __('Meta Keywords For Experience Page') }}</label>
+                    <input
+                      class="form-control"
+                      name="experience_meta_keywords"
+                      value="{{ $data->experience_meta_keywords }}"
+                      placeholder="Enter Meta Keywords"
+                      data-role="tagsinput"
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ __('Meta Description For Experience Page') }}</label>
+                    <textarea
+                      class="form-control"
+                      name="experience_meta_description"
+                      rows="5"
+                      placeholder="Enter Meta Description"
+                    >{{ $data->experience_meta_description }}</textarea>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label>{{ __('Meta Keywords For Testimonial Page') }}</label>
+                    <input
+                      class="form-control"
+                      name="testimonial_meta_keywords"
+                      value="{{ $data->testimonial_meta_keywords }}"
+                      placeholder="Enter Meta Keywords"
+                      data-role="tagsinput"
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ __('Meta Description For Testimonial Page') }}</label>
+                    <textarea
+                      class="form-control"
+                      name="testimonial_meta_description"
+                      rows="5"
+                      placeholder="Enter Meta Description"
+                    >{{ $data->testimonial_meta_description }}</textarea>
+                  </div>
+                </div>
+                    
+                @endif
+
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label>{{ __('Meta Keywords For Blogs Page') }}</label>

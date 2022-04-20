@@ -79,6 +79,33 @@
                           </label>
                           <h5 class="text-center">Theme 2</h5>
                       </div>
+                      <div class="col-6 col-sm-4 mb-2">
+                          <label class="imagecheck mb-2">
+                              <input name="theme" type="radio" value="3" class="imagecheck-input" {{ !empty($data->theme) && $data->theme == 3 ? 'checked' : '' }}>
+                              <figure class="imagecheck-figure">
+                                  <img src="{{asset('assets/front/img/user/themes/theme3.jpg')}}" alt="title" class="imagecheck-image">
+                              </figure>
+                          </label>
+                          <h5 class="text-center">Theme 3</h5>
+                      </div>
+                      <div class="col-6 col-sm-4 mb-2">
+                          <label class="imagecheck mb-2">
+                              <input name="theme" type="radio" value="4" class="imagecheck-input" {{ !empty($data->theme) && $data->theme == 4 ? 'checked' : '' }}>
+                              <figure class="imagecheck-figure">
+                                  <img src="{{asset('assets/front/img/user/themes/theme4.jpg')}}" alt="title" class="imagecheck-image">
+                              </figure>
+                          </label>
+                          <h5 class="text-center">Theme 4</h5>
+                      </div>
+                      <div class="col-6 col-sm-4 mb-2">
+                          <label class="imagecheck mb-2">
+                              <input name="theme" type="radio" value="5" class="imagecheck-input" {{ !empty($data->theme) && $data->theme == 5 ? 'checked' : '' }}>
+                              <figure class="imagecheck-figure">
+                                  <img src="{{asset('assets/front/img/user/themes/theme5.jpg')}}" alt="title" class="imagecheck-image">
+                              </figure>
+                          </label>
+                          <h5 class="text-center">Theme 5</h5>
+                      </div>
                     </div>
                 </div>
 

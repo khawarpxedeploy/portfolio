@@ -48,8 +48,6 @@ class LicenseController extends Controller
 
         Session::flash('license_success', 'Your license is verified successfully!');
         return redirect()->route('LaravelInstaller::environmentWizard');
-        }
-
     }
 
     public function recurse_copy($src, $dst)

@@ -110,8 +110,10 @@
         <img src="{{asset('assets/front/img/profile1/footer_right_shape.png')}}" class="right-shape" alt="">
         <div class="container">
             <div class="footer-content">
-                <p class="mail-title">{{$keywords["Stay_Connected"] ?? "Stay Connected"}}</p>
-                <a class="mail" href="mailto:{{$user->email}}">{{$user->email}}</a>
+                @if(is_array($userPermissions) && in_array('Footer Mail',$userPermissions))
+                    <p class="mail-title">{{$keywords["Stay_Connected"] ?? "Stay Connected"}}</p>
+                    <a class="mail" href="mailto:{{$user->email}}">{{$user->email}}</a>
+                @endif
                 <ul class="social-links">
                     @if(isset($social_medias))
                         @foreach($social_medias as $social_media)

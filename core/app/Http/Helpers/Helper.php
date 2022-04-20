@@ -231,7 +231,7 @@ if (!function_exists('getParam')) {
     function getParam()
     {
         $parsedUrl = parse_url(url()->current());
-        $host =  $parsedUrl['host'];
+        $host = str_replace("www.","",$parsedUrl['host']);
 
         // if it is path based URL, then return {username}
         if (strpos($host, env('WEBSITE_HOST')) !== false && $host == env('WEBSITE_HOST')) {
@@ -293,10 +293,10 @@ if (!function_exists('getUser')) {
         $parsedUrl = parse_url(url()->current());
         
         $host =  $parsedUrl['host'];
-        $hostArr = explode('.', $host);
 
         // if the current URL contains the website domain
         if (strpos($host, env('WEBSITE_HOST')) !== false) {
+            $host = str_replace('www.', '', $host);
             // if current URL is a path based URL
             if ($host == env('WEBSITE_HOST')) {
                 $path = explode('/', $parsedUrl['path']);
@@ -304,6 +304,7 @@ if (!function_exists('getUser')) {
             } 
             // if the current URL is a subdomain
             else {
+                $hostArr = explode('.', $host);
                 $username = $hostArr[0];
             }
             
@@ -323,10 +324,18 @@ if (!function_exists('getUser')) {
                 }
             }
         } else {
+            // Always include 'www.' at the begining of host
+            if (substr($host, 0, 4) == 'www.') {
+                $host = $host;
+            } else {
+                $host = 'www.' . $host;
+            }
             $user = User::where('online_status', 1)
             ->whereHas('user_custom_domains', function($q) use ($host) {
                 $q->where('status','=',1)
-                ->where('requested_domain','=',$host);
+                ->where('requested_domain','=',$host)
+                ->orWhere('requested_domain','=',str_replace("www.","",$host)); 
+                // fetch the custom domain , if it matches 'with www.' URL or 'without www.' URL
             })
             ->whereHas('memberships', function($q){
                 $q->where('status','=',1)
@@ -338,7 +347,7 @@ if (!function_exists('getUser')) {
                 return view('errors.404');
             }
         }
-
+        
         return $user;
     }
 }

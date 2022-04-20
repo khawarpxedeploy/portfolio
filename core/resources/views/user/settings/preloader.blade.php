@@ -45,7 +45,9 @@
                       </div>
                       <input type="file" name="file" id="image" class="form-control">
                       <p class="text-warning">Only JPG, JPEG, PNG, GIF images are allowed</p>
-                      <p id="errfile" class="mb-0 text-danger em"></p>
+                      @if ($errors->has('file'))
+                      <p id="errfile" class="mb-0 text-danger em">{{$errors->first('file')}}</p>
+                      @endif
                     </div>
                   </div>
                 </div>

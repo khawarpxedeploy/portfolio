@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Session;
 class ColorController extends Controller
 {
     public function index() {
-        $data = BasicSetting::where('user_id', Auth::user()->id)->select('base_color');
+        $data = BasicSetting::where('user_id', Auth::user()->id)->select('base_color', 'secondary_base_color');
         if ($data->count() == 0) {
             $data = new BasicSetting;
             $data->user_id = Auth::user()->id;
@@ -26,6 +26,7 @@ class ColorController extends Controller
     public function update(Request $request) {
         $data = BasicSetting::where('user_id', Auth::user()->id)->firstOrFail();
         $data->base_color = $request->base_color;
+        $data->secondary_base_color = $request->secondary_base_color;
         $data->save();
 
         Session::flash('success', 'Base color updated successfully!');

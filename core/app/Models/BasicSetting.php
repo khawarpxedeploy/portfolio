@@ -18,6 +18,7 @@ class BasicSetting extends Model
         'team_section_subtitle',
         'feature_section',
         'process_section',
+        'templates_section',
         'featured_users_section',
         'pricing_section',
         'partners_section',

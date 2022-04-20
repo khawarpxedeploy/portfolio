@@ -47,6 +47,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">Transaction Id</th>
+                                        <th scope="col">Package</th>
                                         <th scope="col">Amount</th>
                                         <th scope="col">Payment Status</th>
                                         <th scope="col">Payment Method</th>
@@ -58,6 +59,12 @@
                                     @foreach ($memberships as $key => $membership)
                                     <tr>
                                         <td>{{strlen($membership->transaction_id) > 30 ? mb_substr($membership->transaction_id, 0, 30, 'UTF-8') . '...' : $membership->transaction_id}}</td>
+                                        <td>
+                                            @if (!empty($membership->package))
+                                                {{$membership->package->title}}
+                                                <span class="badge badge-secondary badge-xs">{{$membership->package->term}}</span>
+                                            @endif
+                                        </td>
                                         @php
                                         $bex = json_decode($membership->settings);
                                         @endphp
@@ -155,10 +162,26 @@
                                                     <p><strong>Term: </strong> {{$membership->package->term}}
                                                     </p>
                                                     <p><strong>Start
-                                                        Date: </strong>{{\Illuminate\Support\Carbon::parse($membership->start_date)->format('M-d-Y')}}
+                                                        Date: </strong>
+                                                        @if (\Illuminate\Support\Carbon::parse($membership->start_date)->format('Y') == '9999')
+                                                            <span class="badge badge-danger">Never Activated</span>
+                                                        @else
+                                                            {{\Illuminate\Support\Carbon::parse($membership->start_date)->format('M-d-Y')}} 
+                                                        @endif
                                                     </p>
                                                     <p><strong>Expire
-                                                        Date: </strong>{{\Illuminate\Support\Carbon::parse($membership->expire_date)->format('M-d-Y')}}
+                                                        Date: </strong>
+                                                        
+                                                        @if (\Illuminate\Support\Carbon::parse($membership->start_date)->format('Y') == '9999')
+                                                            -
+                                                        @else
+                                                            @if ($membership->modified == 1)
+                                                                {{\Illuminate\Support\Carbon::parse($membership->expire_date)->addDay()->format('M-d-Y')}}
+                                                                <span class="badge badge-primary btn-xs">modified by Admin</span>
+                                                            @else
+                                                                {{$membership->package->term == 'lifetime' ? 'Lifetime' : \Illuminate\Support\Carbon::parse($membership->expire_date)->format('M-d-Y')}}
+                                                            @endif
+                                                        @endif
                                                     </p>
                                                     <p>
                                                         <strong>Purchase Type: </strong>

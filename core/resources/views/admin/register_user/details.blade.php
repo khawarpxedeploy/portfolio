@@ -33,6 +33,11 @@
         </div>
     </div>
    <div class="col-md-9">
+       @if (session()->has('membership_warning'))
+            <div class="alert alert-warning text-dark">
+                {{session()->get('membership_warning')}}
+            </div>
+       @endif
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title">{{__('Customer Details')}}</h4>
@@ -95,7 +100,8 @@
                 @endif
 
                 @php
-                    $currPackage = \App\Http\Helpers\UserPermissionHelper::currentPackagePermission($user->id);
+                    $currPackage = \App\Http\Helpers\UserPermissionHelper::currPackageOrPending($user->id);
+                    $currMemb = \App\Http\Helpers\UserPermissionHelper::currMembOrPending($user->id);
                 @endphp
                 <div class="row mb-3">
                     <div class="col-lg-6">
@@ -104,14 +110,48 @@
                     <div class="col-lg-6">
                         @if ($currPackage)
                             <a target="_blank" href="{{route('admin.package.edit', $currPackage->id)}}">{{$currPackage->title}}</a>
+                            <span class="badge badge-secondary badge-xs mr-2">{{$currPackage->term}}</span>
+                            <button type="submit" class="btn btn-xs btn-warning" data-toggle="modal" data-target="#editCurrentPackage"><i class="far fa-edit"></i></button>
+                            <form action="{{route('user.currPackage.remove')}}" class="d-inline-block deleteform" method="POST">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{$user->id}}">
+                                <button type="submit" class="btn btn-xs btn-danger deletebtn"><i class="fas fa-trash"></i></button>
+                            </form>
+
+                            <p class="mb-0">
+                                @if ($currMemb->is_trial == 1)
+                                    (Expire Date: {{Carbon\Carbon::parse($currMemb->expire_date)->format('M-d-Y')}})
+                                    <span class="badge badge-primary">Trial</span>
+                                @else
+                                    (Expire Date: {{$currPackage->term === 'lifetime' ? "Lifetime" : Carbon\Carbon::parse($currMemb->expire_date)->format('M-d-Y')}})
+                                @endif  
+                                @if ($currMemb->status == 0)
+                                    <form id="statusForm{{$currMemb->id}}" class="d-inline-block"
+                                        action="{{route('admin.payment-log.update')}}"
+                                        method="post">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{$currMemb->id}}">
+                                        <select class="form-control form-control-sm bg-warning" name="status"
+                                            onchange="document.getElementById('statusForm{{$currMemb->id}}').submit();">
+                                            <option value=0 selected>Pending</option>
+                                            <option value=1 >Success</option>
+                                            <option value=2>Rejected</option>
+                                        </select>
+                                    </form>
+                                @endif
+                            </p>
+    
                         @else
-                            -
+                            <a data-target="#addCurrentPackage" data-toggle="modal" class="btn btn-xs btn-primary text-white"><i class="fas fa-plus"></i> Add Package</a>
                         @endif
                     </div>
                 </div>
 
+ 
+
                 @php
                     $nextPackage = \App\Http\Helpers\UserPermissionHelper::nextPackage($user->id);
+                    $nextMemb = \App\Http\Helpers\UserPermissionHelper::nextMembership($user->id);
                 @endphp
                 <div class="row mb-3">
                     <div class="col-lg-6">
@@ -120,11 +160,47 @@
                     <div class="col-lg-6">
                         @if ($nextPackage)
                             <a target="_blank" href="{{route('admin.package.edit', $nextPackage->id)}}">{{$nextPackage->title}}</a>
+                            <span class="badge badge-secondary badge-xs mr-2">{{$nextPackage->term}}</span>
+                            <button type="button" class="btn btn-xs btn-warning" data-toggle="modal" data-target="#editNextPackage"><i class="far fa-edit"></i></button>
+                            <form action="{{route('user.nextPackage.remove')}}" class="d-inline-block deleteform" method="POST">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{$user->id}}">
+                                <button type="submit" class="btn btn-xs btn-danger deletebtn"><i class="fas fa-trash"></i></button>
+                            </form>
+
+                            <p class="mb-0">
+                                @if ($currPackage->term != 'lifetime' && $nextMemb->is_trial != 1) 
+                                    (
+                                    Activation Date: 
+                                    {{Carbon\Carbon::parse($nextMemb->start_date)->format('M-d-Y')}}, 
+                                    Expire Date: {{$nextPackage->term === 'lifetime' ?  "Lifetime" : Carbon\Carbon::parse($nextMemb->expire_date)->format('M-d-Y')}})
+                                @endif   
+                                @if ($nextMemb->status == 0)
+                                    <form id="statusForm{{$nextMemb->id}}" class="d-inline-block"
+                                        action="{{route('admin.payment-log.update')}}"
+                                        method="post">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{$nextMemb->id}}">
+                                        <select class="form-control form-control-sm bg-warning" name="status"
+                                            onchange="document.getElementById('statusForm{{$nextMemb->id}}').submit();">
+                                            <option value=0 selected>Pending</option>
+                                            <option value=1 >Success</option>
+                                            <option value=2>Rejected</option>
+                                        </select>
+                                    </form>
+                                @endif
+                            </p>
                         @else
-                            -
+                            @if (!empty($currPackage))
+                                <a class="btn btn-xs btn-primary text-white" data-toggle="modal" data-target="#addNextPackage"><i class="fas fa-plus"></i> Add Package</a>
+                            @else
+                                -
+                            @endif
                         @endif
                     </div>
                 </div>
+
+                
 
                 <div class="row mb-3">
                     <div class="col-lg-6">
@@ -221,4 +297,9 @@
 
    </div>
 </div>
+
+@includeIf('admin.register_user.edit-current-package')
+@includeIf('admin.register_user.add-current-package')
+@includeIf('admin.register_user.edit-next-package')
+@includeIf('admin.register_user.add-next-package')
 @endsection

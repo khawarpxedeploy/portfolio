@@ -21,6 +21,12 @@ class SEO extends Model
       'blogs_meta_keywords',
       'blogs_meta_description',
       'portfolios_meta_keywords',
-      'portfolios_meta_description'
+      'portfolios_meta_description',
+      'about_meta_keywords',
+      'about_meta_description',
+      'experience_meta_keywords',
+      'experience_meta_description',
+      'testimonial_meta_keywords',
+      'testimonial_meta_description'
     ];
 }

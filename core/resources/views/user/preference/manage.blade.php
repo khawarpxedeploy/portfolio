@@ -128,6 +128,18 @@
                                                    @if(is_array($preferences) && in_array('Contact', $preferences)) checked @endif>
                                             <span class="selectgroup-button">Contact</span>
                                         </label>
+                                        <label class="selectgroup-item">
+                                            <input type="checkbox" name="permissions[]" value="Footer Mail"
+                                                   class="selectgroup-input"
+                                                   @if(is_array($preferences) && in_array('Footer Mail', $preferences)) checked @endif>
+                                            <span class="selectgroup-button">Footer Mail</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input type="checkbox" name="permissions[]" value="Profile Listing"
+                                                   class="selectgroup-input"
+                                                   @if(is_array($preferences) && in_array('Profile Listing', $preferences)) checked @endif>
+                                            <span class="selectgroup-button">Profile Listing</span>
+                                        </label>
                                     </div>
                                 </div>
                             </form>

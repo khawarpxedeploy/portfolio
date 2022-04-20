@@ -71,12 +71,8 @@ class BasicController extends Controller
                 },
             ],
         ];
-
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            $validator->getMessageBag()->add('error', 'true');
-            return response()->json(['errors' => $validator->errors(), 'id' => 'favicon']);
-        }
+        
+        $request->validate($rules);
 
         if ($request->hasFile('favicon')) {
             $filename = uniqid() . '.' . $img->getClientOriginalExtension();
@@ -124,11 +120,7 @@ class BasicController extends Controller
             ],
         ];
 
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            $validator->getMessageBag()->add('error', 'true');
-            return response()->json(['errors' => $validator->errors(), 'id' => 'logo']);
-        }
+        $request->validate($rules);
 
         if ($request->hasFile('file')) {
             $bss = BasicSetting::where('user_id',Auth::id())->first();
@@ -177,11 +169,7 @@ class BasicController extends Controller
             ],
         ];
 
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            $validator->getMessageBag()->add('error', 'true');
-            return response()->json(['errors' => $validator->errors(), 'id' => 'preloader']);
-        }
+        $request->validate($rules);
 
 
 
@@ -219,6 +207,7 @@ class BasicController extends Controller
         }
 
         $data['home_setting'] = $text;
+        $data['language'] = $language;
 
         return view('user.home.edit',$data);
     }
@@ -262,6 +251,25 @@ class BasicController extends Controller
         return "success";
     }
 
+    public function homeImageRemove(Request $request) {
+        $userId = $request->userId;
+        $type = $request->type;
+        $langId = $request->langId;
+
+        if (Auth::user()->id != $userId) {
+            return;
+        }
+
+        if ($type == "hero") {
+            $homeText = HomePageText::where('user_id', $userId)->where('language_id', $langId)->first();
+            $homeText->hero_image = NULL;
+            $homeText->save();
+        }
+
+        Session::flash('success', 'Image removed');
+        return "success";
+    }
+
     public function cvUpload(){
         $data['basic_setting'] = BasicSetting::where('user_id',Auth::id())->first();
         return view('user.cv',$data);
@@ -285,10 +293,12 @@ class BasicController extends Controller
                 if($bss->favicon){
                     @unlink('assets/front/img/user/cv/' . $bss->cv);
                 }
+                $bss->cv_original = $file->getClientOriginalName();
                 $bss->cv = $filename;
                 $bss->save();
             }else {
                 $bs = new BasicSetting();
+                $bs->cv_original = $file->getClientOriginalName();
                 $bs->cv = $filename;
                 $bs->user_id = Auth::id();
                 $bs->save();
@@ -296,6 +306,17 @@ class BasicController extends Controller
         }
         Session::flash('success', 'Pdf update successfully.');
         return "success";
+    }
+
+    public function deleteCV() {
+        $bs = BasicSetting::where('user_id',Auth::id())->first();
+        @unlink('assets/front/img/user/cv/' . $bs->cv);
+        $bs->cv = NULL;
+        $bs->cv_original = NULL;
+        $bs->save();
+
+        Session::flash('success', 'CV removed successfully');
+        return back();
     }
 
     public function seo(Request $request)

@@ -429,6 +429,67 @@ $(function ($) {
       }
     });
   });
+
+  $(".update-btn").each(function() {
+    $(this).on('click', function (e) {
+      let $this = $(this);
+  
+      $(".request-loader").addClass("show");
+  
+      let formId = $(this).data('form_id');
+      let ajaxEditForm = document.getElementById(formId);
+      let fd = new FormData(ajaxEditForm);
+      let url = $("#" + formId).attr('action');
+      let method = $("#" + formId).attr('method');
+  
+      if ($("#" + formId + " .summernote").length > 0) {
+        $("#" + formId + " .summernote").each(function (i) {
+          let content = $(this).summernote('code');
+          fd.delete($(this).attr('name'));
+          fd.append($(this).attr('name'), content);
+        })
+      }
+  
+      $.ajax({
+        url: url,
+        method: method,
+        data: fd,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+          let parentCount = $this.parents('.modal').length;
+          let parentId;
+          // if the form is in modal
+          if (parentCount > 0) {
+            parentId = $this.parents('.modal').attr('id');
+          } 
+          // if the form is not in modal
+          else {
+            parentId = formId;
+          }
+          $(".request-loader").removeClass("show");
+  
+          $("#" + parentId).children(".em").each(function () {
+            $(this).html('');
+          })
+  
+          if (data == "success") {
+            location.reload();
+          }
+  
+          // if error occurs
+          else if (typeof data.error != 'undefined') {
+            for (let x in data) {
+              if (x == 'error') {
+                continue;
+              }
+              $("#" + parentId + " .eerr" + x).html(data[x][0]);
+            }
+          }
+        }
+      });
+    });
+  });
   /* ***************************************************
   ==========Form Update with AJAX Request End==========
   ******************************************************/

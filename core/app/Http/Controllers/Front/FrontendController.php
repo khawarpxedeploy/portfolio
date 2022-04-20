@@ -77,6 +77,20 @@ class FrontendController extends Controller
             ->where('start_date','<=', Carbon::now()->format('Y-m-d'))
             ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
         })->orderBy('feature_time', 'DESC')->get();
+
+
+        $data['templates'] = User::where([
+            ['preview_template', 1],
+            ['status', 1],
+            ['online_status', 1]
+        ])
+        ->whereHas('memberships', function ($q) {
+            $q->where('status', '=', 1)
+                ->where('start_date', '<=', Carbon::now()->format('Y-m-d'))
+                ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
+        })->orderBy('template_serial_number', 'ASC')->get();
+
+
         $data['testimonials'] = Testimonial::where('language_id', $lang_id)
             ->orderBy('serial_number', 'ASC')
             ->get();
@@ -348,6 +362,9 @@ class FrontendController extends Controller
                 ->where('start_date','<=', Carbon::now()->format('Y-m-d'))
                 ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'));
             })
+            ->whereHas('permissions', function($q){
+                $q->where('permissions','LIKE','%"Profile Listing"%');
+            })
             ->when($request->search, function ($q) use ($request) {
                 return $q->where(function ($query) use ($request) {
                         $query->where('first_name', 'like', '%' . $request->search . '%')
@@ -366,9 +383,7 @@ class FrontendController extends Controller
                     $query->whereIn('id', $userIds);
                 });
             })
-            // ->when($userIds, function ($q) use ($userIds) {
-            //     return $q;
-            // })
+            
             ->orderBy('id', 'DESC')
             ->paginate(9);
 
@@ -379,6 +394,7 @@ class FrontendController extends Controller
     public function userDetailView($domain)
     {
         $user = getUser();
+
         if (Auth::check() && Auth::user()->id != $user->id && $user->online_status != 1) {
             return redirect()->route('front.index');
         } elseif (!Auth::check() && $user->online_status != 1) {
@@ -444,13 +460,50 @@ class FrontendController extends Controller
         $data['user'] = $user;
 
         $ubs = User\BasicSetting::select('theme')->where('user_id', $user->id)->firstOrFail();
+        
         if ($ubs->theme == 1) {
             return view('user.profile1.index', $data);
         } elseif ($ubs->theme == 2) {
             return view('user.profile1.index2', $data);
+        } elseif ($ubs->theme == 3) {
+            return view('user.profile1.theme3.index', $data);
+        } elseif ($ubs->theme == 4) {
+            return view('user.profile1.theme4.index', $data);
+        } elseif ($ubs->theme == 5) {
+            return view('user.profile1.theme5.index', $data);
         } else {
             return view('user.profile.profile', $data);
         }
+    }
+
+    public function userAbout($domain) {
+        $user = getUser();
+        $id = $user->id;
+
+        $ubs = User\BasicSetting::select('theme')->where('user_id', $user->id)->firstOrFail();
+        if ($ubs->theme != 3) {
+            return view('errors.404');
+        }
+
+        if (session()->has('user_lang')) {
+            $userCurrentLang = UserLanguage::where('code', session()->get('user_lang'))->where('user_id', $user->id)->first();
+            if (empty($userCurrentLang)) {
+                $userCurrentLang = UserLanguage::where('is_default', 1)->where('user_id', $user->id)->first();
+                session()->put('user_lang', $userCurrentLang->code);
+            }
+        } else {
+            $userCurrentLang = UserLanguage::where('is_default', 1)->where('user_id', $user->id)->first();
+        }
+
+        $data['home_text'] = User\HomePageText::query()
+            ->where([
+                ['user_id', $id],
+                ['language_id', $userCurrentLang->id]
+            ])->first();
+
+        $data['achievements'] = $user->achievements()->where('language_id', $userCurrentLang->id)->orderBy('serial_number','ASC')->get() ?? collect([]);
+            
+        return view('user.profile1.theme3.about', $data);
     }
 
     public function paymentInstruction(Request $request)
@@ -474,9 +527,15 @@ class FrontendController extends Controller
     
         $request->validate($rules);
 
-        $toUser = User::query()->findOrFail($request->id);
-        $data['toMail'] = $toUser->email;
-        $data['toName'] = $toUser->username;
+        
+        if (!empty($request->type) && $request->type == 'vcard') {
+            $data['toMail'] = $request->to_mail;
+            $data['toName'] = $request->to_name;
+        } else {
+            $toUser = User::query()->findOrFail($request->id);
+            $data['toMail'] = $toUser->email;
+            $data['toName'] = $toUser->username;
+        }
         $data['subject'] = $request->subject;
         $data['body'] = "<div>$request->message</div><br>
                          <strong>For further contact with the enquirer please use the below information:</strong><br>
@@ -569,6 +628,12 @@ class FrontendController extends Controller
             return view('user.profile1.services', $data);
         } elseif ($ubs->theme == 2) {
             return view('user.profile1.services2', $data);
+        } elseif ($ubs->theme == 3) {
+            return view('user.profile1.theme3.services', $data);
+        } elseif ($ubs->theme == 4) {
+            return view('user.profile1.theme4.services', $data);
+        } elseif ($ubs->theme == 5) {
+            return view('user.profile1.theme5.services', $data);
         } else {
             return view('user.profile.services', $data);
         }
@@ -581,11 +646,84 @@ class FrontendController extends Controller
         $ubs = User\BasicSetting::select('theme')->where('user_id', $userId)->firstOrFail();
         if ($ubs->theme == 1 || $ubs->theme == 2) {
             $data['folder'] = "profile1";
+        } elseif ($ubs->theme == 3) {
+            $data['folder'] = "profile1.theme3";
+        } elseif ($ubs->theme == 4) {
+            $data['folder'] = "profile1.theme4";
+        } elseif ($ubs->theme == 5) {
+            $data['folder'] = "profile1.theme5";
         } else {
             $data['folder'] = "profile";
         }
 
         return view('user.profile-common.service-details', $data);
+    }
+
+    public function userExperience($domain){
+        $user = getUser();
+        $id = $user->id;
+
+        $ubs = User\BasicSetting::select('theme')->where('user_id', $user->id)->firstOrFail();
+        if ($ubs->theme != 3) {
+            return view('errors.404');
+        }
+
+        if (session()->has('user_lang')) {
+            $userCurrentLang = UserLanguage::where('code', session()->get('user_lang'))->where('user_id', $user->id)->first();
+            if (empty($userCurrentLang)) {
+                $userCurrentLang = UserLanguage::where('is_default', 1)->where('user_id', $user->id)->first();
+                session()->put('user_lang', $userCurrentLang->code);
+            }
+        } else {
+            $userCurrentLang = UserLanguage::where('is_default', 1)->where('user_id', $user->id)->first();
+        }
+
+        $data['home_text'] = User\HomePageText::query()
+            ->where([
+                ['user_id', $id],
+                ['language_id', $userCurrentLang->id]
+            ])->first();
+
+        $data['job_experiences'] = $user->job_experiences()
+                ->where('lang_id', $userCurrentLang->id)
+                ->orderBy('serial_number','ASC')
+                ->get() ?? collect([]);
+        $data['educations'] = $user->educations()
+                ->where('lang_id', $userCurrentLang->id)
+                ->orderBy('serial_number','ASC')
+                ->get() ?? collect([]);
+
+        return view('user.profile1.theme3.experience', $data);
+    }
+
+    public function userTestimonial($domain){
+        $user = getUser();
+        $id = $user->id;
+
+        $ubs = User\BasicSetting::select('theme')->where('user_id', $user->id)->firstOrFail();
+        if ($ubs->theme != 3) {
+            return view('errors.404');
+        }
+
+        if (session()->has('user_lang')) {
+            $userCurrentLang = UserLanguage::where('code', session()->get('user_lang'))->where('user_id', $user->id)->first();
+            if (empty($userCurrentLang)) {
+                $userCurrentLang = UserLanguage::where('is_default', 1)->where('user_id', $user->id)->first();
+                session()->put('user_lang', $userCurrentLang->code);
+            }
+        } else {
+            $userCurrentLang = UserLanguage::where('is_default', 1)->where('user_id', $user->id)->first();
+        }
+
+        $data['home_text'] = User\HomePageText::query()
+            ->where([
+                ['user_id', $id],
+                ['language_id', $userCurrentLang->id]
+            ])->first();
+
+        $data['testimonials'] = $user->testimonials()->where('lang_id', $userCurrentLang->id)->orderBy('serial_number','ASC')->get() ?? collect([]);
+
+        return view('user.profile1.theme3.testimonial', $data);
     }
 
     public function userBlogs(Request $request, $domain){
@@ -648,6 +786,12 @@ class FrontendController extends Controller
             return view('user.profile1.blogs', $data);
         } elseif ($ubs->theme == 2) {
             return view('user.profile1.blogs2', $data);
+        } elseif ($ubs->theme == 3) {
+            return view('user.profile1.theme3.blogs', $data);
+        } elseif ($ubs->theme == 4) {
+            return view('user.profile1.theme4.blogs', $data);
+        } elseif ($ubs->theme == 5) {
+            return view('user.profile1.theme5.blogs', $data);
         } else {
             return view('user.profile.blogs', $data);
         }
@@ -691,6 +835,12 @@ class FrontendController extends Controller
         $ubs = User\BasicSetting::select('theme')->where('user_id', $userId)->firstOrFail();
         if ($ubs->theme == 1 || $ubs->theme == 2) {
             $data['folder'] = "profile1";
+        } elseif ($ubs->theme == 3) {
+            $data['folder'] = "profile1.theme3";
+        } elseif ($ubs->theme == 4) {
+            $data['folder'] = "profile1.theme4";
+        } elseif ($ubs->theme == 5) {
+            $data['folder'] = "profile1.theme5";
         } else {
             $data['folder'] = "profile";
         }
@@ -738,6 +888,12 @@ class FrontendController extends Controller
             return view('user.profile1.portfolios', $data);
         } elseif ($ubs->theme == 2) {
             return view('user.profile1.portfolios2', $data);
+        } elseif ($ubs->theme == 3) {
+            return view('user.profile1.theme3.portfolios', $data);
+        } elseif ($ubs->theme == 4) {
+            return view('user.profile1.theme4.portfolios', $data);
+        } elseif ($ubs->theme == 5) {
+            return view('user.profile1.theme5.portfolios', $data);
         } else {
             return view('user.profile.portfolios', $data);
         }
@@ -771,12 +927,48 @@ class FrontendController extends Controller
         $ubs = User\BasicSetting::select('theme')->where('user_id', $userId)->firstOrFail();
         if ($ubs->theme == 1 || $ubs->theme == 2) {
             $data['folder'] = "profile1";
+        } elseif ($ubs->theme == 3) {
+            $data['folder'] = "profile1.theme3";
+        } elseif ($ubs->theme == 4) {
+            $data['folder'] = "profile1.theme4";
+        } elseif ($ubs->theme == 5) {
+            $data['folder'] = "profile1.theme5";
         } else {
             $data['folder'] = "profile";
         }
 
         return view('user.profile-common.portfolio-details', $data);
     }
+
+    public function userContact($domain) {
+        $user = getUser();
+        $id = $user->id;
+
+        $ubs = User\BasicSetting::select('theme')->where('user_id', $user->id)->firstOrFail();
+        if ($ubs->theme != 3) {
+            return view('errors.404');
+        }
+
+        if (session()->has('user_lang')) {
+            $userCurrentLang = UserLanguage::where('code', session()->get('user_lang'))->where('user_id', $user->id)->first();
+            if (empty($userCurrentLang)) {
+                $userCurrentLang = UserLanguage::where('is_default', 1)->where('user_id', $user->id)->first();
+                session()->put('user_lang', $userCurrentLang->code);
+            }
+        } else {
+            $userCurrentLang = UserLanguage::where('is_default', 1)->where('user_id', $user->id)->first();
+        }
+
+        $data['home_text'] = User\HomePageText::query()
+            ->where([
+                ['user_id', $id],
+                ['language_id', $userCurrentLang->id]
+            ])->first();
+
+            
+        return view('user.profile1.theme3.contact', $data);
+    }
+
     public function changeLanguage($lang): \Illuminate\Http\RedirectResponse
     {
         session()->put('lang', $lang);
@@ -792,39 +984,54 @@ class FrontendController extends Controller
     public function vcard($domain, $id) {
         $vcard = UserVcard::findOrFail($id);
 
-        
         $count = $vcard->user->memberships()->where('status','=',1)
-                ->where('start_date','<=', Carbon::now()->format('Y-m-d'))
-                ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'))->count();
+            ->where('start_date','<=', Carbon::now()->format('Y-m-d'))
+            ->where('expire_date', '>=', Carbon::now()->format('Y-m-d'))
+            ->count();
+
         // check if the vcard owner does not have membership
         if ($count == 0) {
             return view('errors.404');
         }
-
 
         $cFeatures = UserPermissionHelper::packagePermission($vcard->user_id);
         $cFeatures = json_decode($cFeatures, true);
         if (empty($cFeatures) || !is_array($cFeatures) || !in_array('vCard', $cFeatures)) {
             return view('errors.404');
         }
-        
+
         $parsedUrl = parse_url(url()->current());
-        
-        $host =  $parsedUrl['host'];
+        $host = $parsedUrl['host'];
         // if the current host contains the website domain
         if (strpos($host, env('WEBSITE_HOST')) !== false) {
+            $host = str_replace("www.","",$host);
             // if the current URL is subdomain
             if ($host != env('WEBSITE_HOST')) {
-                if (!cPackageHasSubdomain($vcard->user)) {
+                $hostArr = explode('.', $host);
+                $username = $hostArr[0];
+                if (strtolower($vcard->user->username) != strtolower($username) || !cPackageHasSubdomain($vcard->user)) {
+                    return view('errors.404');
+                }
+            } else {
+                $path = explode('/', $parsedUrl['path']);
+                $username = $path[1];
+                if (strtolower($vcard->user->username) != strtolower($username)) {
                     return view('errors.404');
                 }
             }
         } 
         // if the current host doesn't contain the website domain (meaning, custom domain)
         else {
+            // Always include 'www.' at the begining of host
+            if (substr($host, 0, 4) == 'www.') {
+                $host = $host;
+            } else {
+                $host = 'www.' . $host;
+            }
             // if the current package doesn't have 'custom domain' feature || the custom domain is not connected
-            $cdomain = UserCustomDomain::where('requested_domain', $host)->where('status', 1)->count();
-            if (!cPackageHasCdomain($vcard->user) || $cdomain == 0) {
+            $cdomain = UserCustomDomain::where('requested_domain','=',$host)->orWhere('requested_domain','=',str_replace("www.","",$host))->where('status', 1)->firstOrFail();
+            $username = $cdomain->user->username;
+            if (!cPackageHasCdomain($vcard->user) || ($username != $vcard->user->username)) {
                 return view('errors.404');
             }
         }
@@ -835,7 +1042,7 @@ class FrontendController extends Controller
         if (!empty($vcard->preferences)) {
             $prefs = json_decode($vcard->preferences, true);
         }
-        
+
         $keywords = json_decode($vcard->keywords, true);
 
         $data['vcard'] = $vcard;
@@ -850,6 +1057,18 @@ class FrontendController extends Controller
             return view('vcard.index3', $data);
         } elseif ($vcard->template == 4) {
             return view('vcard.index4', $data);
+        } elseif ($vcard->template == 5) {
+            return view('vcard.index5', $data);
+        } elseif ($vcard->template == 6) {
+            return view('vcard.index6', $data);
+        } elseif ($vcard->template == 7) {
+            return view('vcard.index7', $data);
+        } elseif ($vcard->template == 8) {
+            return view('vcard.index8', $data);
+        } elseif ($vcard->template == 9) {
+            return view('vcard.index9', $data);
+        } elseif ($vcard->template == 10) {
+            return view('vcard.index10', $data);
         }
     }
 
@@ -912,22 +1131,37 @@ class FrontendController extends Controller
         }
         
         $parsedUrl = parse_url(url()->current());
-        
-        $host =  $parsedUrl['host'];
+        $host = $parsedUrl['host'];
         // if the current host contains the website domain
         if (strpos($host, env('WEBSITE_HOST')) !== false) {
+            $host = str_replace("www.","",$host);
             // if the current URL is subdomain
             if ($host != env('WEBSITE_HOST')) {
-                if (!cPackageHasSubdomain($cv->user)) {
+                $hostArr = explode('.', $host);
+                $username = $hostArr[0];
+                if (strtolower($cv->user->username) != strtolower($username) || !cPackageHasSubdomain($cv->user)) {
+                    return view('errors.404');
+                }
+            } else {
+                $path = explode('/', $parsedUrl['path']);
+                $username = $path[1];
+                if (strtolower($cv->user->username) != strtolower($username)) {
                     return view('errors.404');
                 }
             }
         } 
         // if the current host doesn't contain the website domain (meaning, custom domain)
         else {
+            // Always include 'www.' at the begining of host
+            if (substr($host, 0, 4) == 'www.') {
+                $host = $host;
+            } else {
+                $host = 'www.' . $host;
+            }
             // if the current package doesn't have 'custom domain' feature || the custom domain is not connected
-            $cdomain = UserCustomDomain::where('requested_domain', $host)->where('status', 1)->count();
-            if (!cPackageHasCdomain($cv->user) || $cdomain == 0) {
+            $cdomain = UserCustomDomain::where('requested_domain','=',$host)->orWhere('requested_domain','=',str_replace("www.","",$host))->where('status', 1)->firstOrFail();
+            $username = $cdomain->user->username;
+            if (!cPackageHasCdomain($cv->user) || ($username != $cv->user->username)) {
                 return view('errors.404');
             }
         }

@@ -123,6 +123,60 @@
             </th>
         </tr>
         @endif
+        @if ($templateInfo->email_type == 'admin_changed_current_package' || $templateInfo->email_type == 'admin_changed_next_package')
+        <tr>
+            <td>
+              {replaced_package}
+            </td>
+            <th scope="row">
+              Replaced Package Name
+            </th>
+        </tr>
+        @endif
+        @if ($templateInfo->email_type == 'admin_changed_current_package' || $templateInfo->email_type == 'admin_changed_next_package' || $templateInfo->email_type == 'admin_added_current_package' || $templateInfo->email_type == 'admin_added_next_package')
+        <tr>
+            <td>
+              {package_title}
+            </td>
+            <th scope="row">
+              New Package Name
+            </th>
+        </tr>
+        <tr>
+            <td>
+              {package_price}
+            </td>
+            <th scope="row">
+              New Package Price
+            </th>
+        </tr>
+        <tr>
+            <td>
+              {activation_date}
+            </td>
+            <th scope="row">
+              New Package Activation Date
+            </th>
+        </tr>
+        <tr>
+            <td>
+              {expire_date}
+            </td>
+            <th scope="row">
+              New Package Expire Date
+            </th>
+        </tr>
+        @endif
+        @if ($templateInfo->email_type == 'admin_removed_current_package' || $templateInfo->email_type == 'admin_removed_next_package')
+        <tr>
+            <td>
+              {removed_package_title}
+            </td>
+            <th scope="row">
+              Removed Package Name
+            </th>
+        </tr>
+        @endif
 
 
         <tr>

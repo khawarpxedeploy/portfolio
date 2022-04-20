@@ -207,11 +207,25 @@ $selLang = \App\Models\Language::where('code', request()->input('language'))->fi
                                                     </p>
                                                     <p><strong>Start
                                                         Date: </strong>
-                                                        {{\Illuminate\Support\Carbon::parse($membership->start_date)->format('M-d-Y')}}
+                                                        @if (\Illuminate\Support\Carbon::parse($membership->start_date)->format('Y') == '9999')
+                                                            <span class="badge badge-danger">Never Activated</span>
+                                                        @else
+                                                            {{\Illuminate\Support\Carbon::parse($membership->start_date)->format('M-d-Y')}} 
+                                                        @endif
                                                     </p>
                                                     <p><strong>Expire
                                                         Date: </strong>
-                                                        {{$membership->package->term == 'lifetime' ? 'Lifetime' : \Illuminate\Support\Carbon::parse($membership->expire_date)->format('M-d-Y')}}
+                                                        
+                                                        @if (\Illuminate\Support\Carbon::parse($membership->start_date)->format('Y') == '9999')
+                                                            -
+                                                        @else
+                                                            @if ($membership->modified == 1)
+                                                                {{\Illuminate\Support\Carbon::parse($membership->expire_date)->addDay()->format('M-d-Y')}}
+                                                                <span class="badge badge-primary btn-xs">modified by Admin</span>
+                                                            @else
+                                                                {{$membership->package->term == 'lifetime' ? 'Lifetime' : \Illuminate\Support\Carbon::parse($membership->expire_date)->format('M-d-Y')}}
+                                                            @endif
+                                                        @endif
                                                     </p>
                                                     <p>
                                                         <strong>Purchase Type: </strong>

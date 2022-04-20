@@ -39,11 +39,11 @@
                             <li>
                                 <span class="name-specification">Start Date</span>
                                 @if((!empty($previousPackage) && $previousPackage->term == 'lifetime') || (!empty($membership) && $membership->is_trial == 1))
-                                    <input type="hidden" name="start_date" value="{{\Illuminate\Support\Carbon::yesterday()->format('d-m-Y')}}">
-                                    <span class="status-specification">{{\Illuminate\Support\Carbon::today()->format('d-m-Y')}}</span>
+                                    <input type="hidden" name="start_date" value="{{\Carbon\Carbon::today()->format('d-m-Y')}}">
+                                    <span class="status-specification">{{\Carbon\Carbon::today()->format('d-m-Y')}}</span>
                                 @else
-                                    <input type="hidden" name="start_date" value="{{\Illuminate\Support\Carbon::parse($membership->expire_date ?? \Carbon\Carbon::yesterday())->addDay()->format('d-m-Y')}}">
-                                    <span class="status-specification">{{\Illuminate\Support\Carbon::parse($membership->expire_date ?? \Carbon\Carbon::yesterday())->addDay()->format('d-m-Y')}}</span>
+                                    <input type="hidden" name="start_date" value="{{\Carbon\Carbon::parse($membership->expire_date ?? \Carbon\Carbon::yesterday())->addDay()->format('d-m-Y')}}">
+                                    <span class="status-specification">{{\Carbon\Carbon::parse($membership->expire_date ?? \Carbon\Carbon::yesterday())->addDay()->format('d-m-Y')}}</span>
                                 @endif
                             </li>
                             <li>
@@ -51,23 +51,23 @@
                                 <span class="status-specification">
                                     @if($package->term == "monthly")
                                         @if((!empty($previousPackage) && $previousPackage->term == 'lifetime') || (!empty($membership) && $membership->is_trial == 1))
-                                            {{\Illuminate\Support\Carbon::parse(now())->addMonth()->format('d-m-Y')}}
-                                            <input type="hidden" name="expire_date" value="{{\Illuminate\Support\Carbon::parse(now())->addMonth()->format('d-m-Y')}}">
+                                            {{\Carbon\Carbon::parse(now())->addMonth()->format('d-m-Y')}}
+                                            <input type="hidden" name="expire_date" value="{{\Carbon\Carbon::parse(now())->addMonth()->format('d-m-Y')}}">
                                         @else
-                                            {{\Illuminate\Support\Carbon::parse($membership->expire_date ?? now())->addMonth()->format('d-m-Y')}}
-                                            <input type="hidden" name="expire_date" value="{{\Illuminate\Support\Carbon::parse($membership->expire_date ?? now())->addMonth()->format('d-m-Y')}}">
+                                            {{\Carbon\Carbon::parse($membership->expire_date ?? \Carbon\Carbon::yesterday())->addDay()->addMonth()->format('d-m-Y')}}
+                                            <input type="hidden" name="expire_date" value="{{\Carbon\Carbon::parse($membership->expire_date ?? \Carbon\Carbon::yesterday())->addDay()->addMonth()->format('d-m-Y')}}">
                                         @endif
 
                                     @elseif($package->term == 'lifetime')
                                         {{__('Lifetime')}}
-                                        <input type="hidden" name="expire_date" value="{{\Illuminate\Support\Carbon::maxValue()->format('d-m-Y')}}">
+                                        <input type="hidden" name="expire_date" value="{{\Carbon\Carbon::maxValue()->format('d-m-Y')}}">
                                     @else
                                         @if((!empty($previousPackage) && $previousPackage->term == 'lifetime') || (!empty($membership) && $membership->is_trial == 1))
-                                            {{\Illuminate\Support\Carbon::parse(now())->addYear()->format('d-m-Y')}}
-                                            <input type="hidden" name="expire_date" value="{{\Illuminate\Support\Carbon::parse(now())->addYear()->format('d-m-Y')}}">
+                                            {{\Carbon\Carbon::parse(now())->addYear()->format('d-m-Y')}}
+                                            <input type="hidden" name="expire_date" value="{{\Carbon\Carbon::parse(now())->addYear()->format('d-m-Y')}}">
                                         @else
-                                            {{\Illuminate\Support\Carbon::parse($membership->expire_date ?? now())->addYear()->format('d-m-Y')}}
-                                            <input type="hidden" name="expire_date" value="{{\Illuminate\Support\Carbon::parse($membership->expire_date ?? now())->addYear()->format('d-m-Y')}}">
+                                            {{\Carbon\Carbon::parse($membership->expire_date ?? \Carbon\Carbon::yesterday())->addDay()->addYear()->format('d-m-Y')}}
+                                            <input type="hidden" name="expire_date" value="{{\Carbon\Carbon::parse($membership->expire_date ?? \Carbon\Carbon::yesterday())->addDay()->addYear()->format('d-m-Y')}}">
                                         @endif
                                     @endif
                             </span>

@@ -32,28 +32,35 @@
         <div class="card-body pt-5 pb-4">
           <div class="row">
             <div class="col-lg-6 offset-lg-3">
-              <form  id="ajaxForm" enctype="multipart/form-data" action="{{route('user.cv.upload.update')}}" method="POST">
                 @csrf
                 <div class="row">
                   <div class="col-lg-12">
                       @if(isset($basic_setting->cv))
                       <div class="form-group">
-                          <div class="col-md-12">
-                              <a class="btn btn-primary" href="{{asset('assets/front/img/user/cv/'.$basic_setting->cv)}}" target="_blank" download="{{Auth::user()->username}}.pdf">
-                                  <i class="fas fa-download"></i>
-                                  &nbsp;&nbsp;
-                                  <span>Download</span>
-                              </a>
-                          </div>
+                        <a class="btn btn-primary btn-sm" href="{{asset('assets/front/img/user/cv/'.$basic_setting->cv)}}" target="_blank" download="{{Auth::user()->username}}.pdf">
+                            <i class="fas fa-download"></i>
+                            &nbsp;&nbsp;
+                            <span>Download</span>
+                        </a>
+                        <span class="ml-2">
+                          <strong>{{ $basic_setting->cv_original }}</strong>
+                          <form class="d-inline-block" action="{{route('user.cv.upload.delete')}}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger text-white btn-sm ml-2"><i class="far fa-times"></i></button>
+                          </form>
+                        </span>
                       </div>
                       @endif
-                    <div class="form-group">
-                      <div class="col-12 mb-2">
-                        <label for="image"><strong>CV upload*</strong></label>
-                      </div>
-                      <input type="file" name="cv" id="cv" class="form-control" required>
-                      <p id="errcv" class="mb-0 text-danger em"></p>
-                    </div>
+                      <form  id="ajaxForm" enctype="multipart/form-data" action="{{route('user.cv.upload.update')}}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                          <div class="col-12 mb-2">
+                            <label for="image"><strong>CV upload*</strong></label>
+                          </div>
+                          <input type="file" name="cv" id="cv" class="form-control" required>
+                          <p id="errcv" class="mb-0 text-danger em"></p>
+                        </div>
+                      </form>
                   </div>
                 </div>
 
@@ -66,7 +73,6 @@
                     </div>
                   </div>
                 </div>
-              </form>
             </div>
           </div>
         </div>

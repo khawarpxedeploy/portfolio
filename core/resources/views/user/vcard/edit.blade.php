@@ -92,6 +92,54 @@
                                        </figure>
                                     </label>
                                  </div>
+                                 <div class="col-2">
+                                    <label class="imagecheck mb-4">
+                                       <input name="template" type="radio" value="5" class="imagecheck-input" {{$vcard->template == 5 ? 'checked' : ''}}>
+                                       <figure class="imagecheck-figure">
+                                          <img src="{{asset('assets/front/img/user/vcard-templates/5.jpg')}}" alt="title" class="imagecheck-image">
+                                       </figure>
+                                    </label>
+                                 </div>
+                                 <div class="col-2">
+                                    <label class="imagecheck mb-4">
+                                       <input name="template" type="radio" value="6" class="imagecheck-input" {{$vcard->template == 6 ? 'checked' : ''}}>
+                                       <figure class="imagecheck-figure">
+                                          <img src="{{asset('assets/front/img/user/vcard-templates/6.jpg')}}" alt="title" class="imagecheck-image">
+                                       </figure>
+                                    </label>
+                                 </div>
+                                 <div class="col-2">
+                                    <label class="imagecheck mb-4">
+                                       <input name="template" type="radio" value="7" class="imagecheck-input" {{$vcard->template == 7 ? 'checked' : ''}}>
+                                       <figure class="imagecheck-figure">
+                                          <img src="{{asset('assets/front/img/user/vcard-templates/7.jpg')}}" alt="title" class="imagecheck-image">
+                                       </figure>
+                                    </label>
+                                 </div>
+                                 <div class="col-2">
+                                    <label class="imagecheck mb-4">
+                                       <input name="template" type="radio" value="8" class="imagecheck-input" {{$vcard->template == 8 ? 'checked' : ''}}>
+                                       <figure class="imagecheck-figure">
+                                          <img src="{{asset('assets/front/img/user/vcard-templates/8.jpg')}}" alt="title" class="imagecheck-image">
+                                       </figure>
+                                    </label>
+                                 </div>
+                                 <div class="col-2">
+                                    <label class="imagecheck mb-4">
+                                       <input name="template" type="radio" value="9" class="imagecheck-input" {{$vcard->template == 9 ? 'checked' : ''}}>
+                                       <figure class="imagecheck-figure">
+                                          <img src="{{asset('assets/front/img/user/vcard-templates/9.jpg')}}" alt="title" class="imagecheck-image">
+                                       </figure>
+                                    </label>
+                                 </div>
+                                 <div class="col-2">
+                                    <label class="imagecheck mb-4">
+                                       <input name="template" type="radio" value="10" class="imagecheck-input" {{$vcard->template == 10 ? 'checked' : ''}}>
+                                       <figure class="imagecheck-figure">
+                                          <img src="{{asset('assets/front/img/user/vcard-templates/10.jpg')}}" alt="title" class="imagecheck-image">
+                                       </figure>
+                                    </label>
+                                 </div>
                               </div>
                               <p class="em text-danger em-0" id="errtemplate"></p>
                            </div>

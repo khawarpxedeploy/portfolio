@@ -401,10 +401,12 @@ ul.social-link li {
     margin-right: 10px;
     vertical-align: middle;
 }
+
 button.printBtn {
     position: absolute;
     right: 20px;
-    top: 20px;
+    top: 2px;
+    z-index: 100;
 }
 /*====================
     End Cv-page css 

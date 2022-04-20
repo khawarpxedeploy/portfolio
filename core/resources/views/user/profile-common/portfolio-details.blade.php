@@ -21,6 +21,7 @@
 {{$keywords["Portfolio_Details"] ?? "Portfolio Details"}}
 @endsection
 
+
 @section('content')
 <section class="single-page-details pb-30">
     <div class="container">

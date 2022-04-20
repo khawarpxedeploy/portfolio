@@ -13,6 +13,7 @@ use App\Models\OfflineGateway;
 use App\Models\Package;
 use App\Models\PaymentGateway;
 use App\Models\User;
+use App\Models\User\BasicSetting as UserBasicSetting;
 use App\Models\User\Language;
 use App\Models\User\UserPermission;
 use Carbon\Carbon;
@@ -41,7 +42,13 @@ class RegisterUserController extends Controller
     public function view($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.register_user.details',compact('user'));
+        $packages = Package::query()->where('status', '1')->get();
+
+        $online = PaymentGateway::query()->where('status', 1)->get();
+        $offline = OfflineGateway::where('status', 1)->get();
+        $gateways = $online->merge($offline);
+
+        return view('admin.register_user.details',compact('user', 'packages', 'gateways'));
 
     }
 
@@ -76,6 +83,10 @@ class RegisterUserController extends Controller
                 'online_status' => $request["online_status"],
                 'status' => 1,
                 'email_verified' => 1,
+            ]);
+
+            UserBasicSetting::create([
+                'user_id' => $user->id,
             ]);
         }
         
@@ -127,6 +138,8 @@ class RegisterUserController extends Controller
             $package = Package::findOrFail($request['package_id']);
             $features = json_decode($package->features, true);
             $features[] = "Contact";
+            $features[] = "Footer Mail";
+            $features[] = "Profile Listing";
             UserPermission::create([
                 'package_id' => $request['package_id'],
                 'user_id' => $user->id,
@@ -194,6 +207,100 @@ class RegisterUserController extends Controller
         $user->save();
         Session::flash('success', 'User featured update successfully!');
         return back();
+    }
+
+    public function userTemplate(Request $request)
+    {
+        // return $request;
+        if ($request->template == 1) {
+            $prevImg = $request->file('preview_image');
+            $allowedExts = array('jpg', 'png', 'jpeg');
+    
+            $rules = [
+                'serial_number' => 'required|integer',
+                'preview_image' => [
+                    'required',
+                    function ($attribute, $value, $fail) use ($prevImg, $allowedExts) {
+                        if (!empty($prevImg)) {
+                            $ext = $prevImg->getClientOriginalExtension();
+                            if (!in_array($ext, $allowedExts)) {
+                                return $fail("Only png, jpg, jpeg image is allowed");
+                            }
+                        }
+                    },
+                ]
+            ];
+    
+    
+            $request->validate($rules);
+        }
+
+        $user = User::where('id',$request->user_id)->first();
+
+        if ($request->template == 1) {
+            if ($request->hasFile('preview_image')) {
+                @unlink('assets/front/img/template-previews/' . $user->template_img);
+                $filename = uniqid() . '.' . $prevImg->getClientOriginalExtension();
+                $dir = 'assets/front/img/template-previews/';
+                @mkdir($dir, 0775, true);
+                $request->file('preview_image')->move($dir, $filename);
+                $user->template_img = $filename;
+            }
+            $user->template_serial_number = $request->serial_number;
+        } else {
+            @unlink('assets/front/img/template-previews/' . $user->template_img);
+            $user->template_img = NULL;
+            $user->template_serial_number = 0;
+        }
+        $user->preview_template = $request->template;
+        $user->save();
+        Session::flash('success', 'Status updated successfully!');
+        return back();
+    }
+
+    public function userUpdateTemplate(Request $request)
+    {
+        $prevImg = $request->file('preview_image');
+        $allowedExts = array('jpg', 'png', 'jpeg');
+
+        $rules = [
+            'serial_number' => 'required|integer',
+            'preview_image' => [
+                function ($attribute, $value, $fail) use ($prevImg, $allowedExts) {
+                    if (!empty($prevImg)) {
+                        $ext = $prevImg->getClientOriginalExtension();
+                        if (!in_array($ext, $allowedExts)) {
+                            return $fail("Only png, jpg, jpeg image is allowed");
+                        }
+                    }
+                },
+            ]
+        ];
+    
+    
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $errmsgs = $validator->getMessageBag()->add('error', 'true');
+            return response()->json($validator->errors());
+        }
+
+        $user = User::where('id',$request->user_id)->first();
+
+        
+        if ($request->hasFile('preview_image')) {
+            @unlink('assets/front/img/template-previews/' . $user->template_img);
+            $filename = uniqid() . '.' . $prevImg->getClientOriginalExtension();
+            $dir = 'assets/front/img/template-previews/';
+            @mkdir($dir, 0775, true);
+            $request->file('preview_image')->move($dir, $filename);
+            $user->template_img = $filename;
+        }
+        $user->template_serial_number = $request->serial_number;
+        $user->save();
+
+        
+        Session::flash('success', 'Status updated successfully!');
+        return "success";
     }
 
 
@@ -533,4 +640,341 @@ class RegisterUserController extends Controller
         Session::flash('success', 'Users deleted successfully!');
         return "success";
     }
+
+    public function removeCurrPackage(Request $request) {
+        $userId = $request->user_id;
+        $user = User::findOrFail($userId);
+        $currMembership = UserPermissionHelper::currMembOrPending($userId);
+        $currPackage = Package::select('title')->findOrFail($currMembership->package_id);
+        $nextMembership = UserPermissionHelper::nextMembership($userId);
+        $be = BasicExtended::first();
+        $bs = BasicSetting::select('website_title')->first();
+
+        $today = Carbon::now();
+
+        // just expire the current package
+        $currMembership->expire_date = $today->subDay();
+        $currMembership->modified = 1;
+        if ($currMembership->status == 0) {
+            $currMembership->status = 2;
+        }
+        $currMembership->save();
+            
+        // if next package exists
+        if (!empty($nextMembership)) {
+            $nextPackage = Package::find($nextMembership->package_id);
+
+            $nextMembership->start_date = Carbon::parse(Carbon::today()->format('d-m-Y'));
+            if ($nextPackage->term == 'monthly') {
+                $nextMembership->expire_date = Carbon::parse(Carbon::today()->addMonth()->format('d-m-Y'));
+            } elseif ($nextPackage->term == 'yearly') {
+                $nextMembership->expire_date = Carbon::parse(Carbon::today()->addYear()->format('d-m-Y'));
+            } elseif ($nextPackage->term == 'lifetime') {
+                $nextMembership->expire_date = Carbon::parse(Carbon::maxValue()->format('d-m-Y'));
+            }
+            $nextMembership->save();
+        }
+
+        $this->sendMail(NULL, NULL, $request->payment_method, $user, $bs, $be, 'admin_removed_current_package', NULL, $currPackage->title);
+
+        Session::flash('success', 'Current Package removed successfully!');
+        return back();
+    }
+
+
+    public function sendMail($memb, $package, $paymentMethod, $user, $bs, $be, $mailType, $replacedPackage = NULL, $removedPackage = NULL) {
+
+        if ($mailType != 'admin_removed_current_package' && $mailType != 'admin_removed_next_package') {
+            $transaction_id = UserPermissionHelper::uniqidReal(8);
+            $activation = $memb->start_date;
+            $expire = $memb->expire_date;
+            $info['start_date'] = $activation->toFormattedDateString();
+            $info['expire_date'] = $expire->toFormattedDateString();
+            $info['payment_method'] = $paymentMethod;
+
+            $file_name = $this->makeInvoice($info,"membership",$user,NULL,$package->price,"Stripe",$user->phone,$be->base_currency_symbol_position,$be->base_currency_symbol,$be->base_currency_text,$transaction_id,$package->title);
+        }
+
+        $mailer = new MegaMailer();
+        $data = [
+            'toMail' => $user->email,
+            'toName' => $user->fname,
+            'username' => $user->username,
+            'website_title' => $bs->website_title,
+            'templateType' => $mailType
+        ];
+        
+        if ($mailType != 'admin_removed_current_package' && $mailType != 'admin_removed_next_package') {
+            $data['package_title'] = $package->title;
+            $data['package_price'] = ($be->base_currency_text_position == 'left' ? $be->base_currency_text . ' ' : '') . $package->price . ($be->base_currency_text_position == 'right' ? ' ' . $be->base_currency_text : '');
+            $data['activation_date'] = $activation->toFormattedDateString();
+            $data['expire_date'] = Carbon::parse($expire->toFormattedDateString())->format('Y') == '9999' ? 'Lifetime' : $expire->toFormattedDateString();
+            $data['membership_invoice'] = $file_name;
+        }
+        if ($mailType != 'admin_removed_current_package' || $mailType != 'admin_removed_next_package') {
+            $data['removed_package_title'] = $removedPackage;
+        }
+
+        if (!empty($replacedPackage)) {
+            $data['replaced_package'] = $replacedPackage;
+        }
+
+        $mailer->mailFromAdmin($data);
+    }
+
+
+    public function changeCurrPackage(Request $request) {
+        $userId = $request->user_id;
+        $user = User::findOrFail($userId);
+        $currMembership = UserPermissionHelper::currMembOrPending($userId);
+        $nextMembership = UserPermissionHelper::nextMembership($userId);
+
+        $be = BasicExtended::first();
+        $bs = BasicSetting::select('website_title')->first();
+        
+        $selectedPackage = Package::find($request->package_id);
+        
+        // if the user has a next package to activate & selected package is 'lifetime' package
+        if (!empty($nextMembership) && $selectedPackage->term == 'lifetime') {
+            Session::flash('membership_warning', 'To add a Lifetime package as Current Package, You have to remove the next package');
+            return back();
+        }
+
+        // expire the current package
+        $currMembership->expire_date = Carbon::parse(Carbon::now()->subDay()->format('d-m-Y'));
+        $currMembership->modified = 1;
+        if ($currMembership->status == 0) {
+            $currMembership->status = 2;
+        }
+        $currMembership->save();
+
+        // calculate expire date for selected package
+        if ($selectedPackage->term == 'monthly') {
+            $exDate = Carbon::now()->addMonth()->format('d-m-Y');
+        } elseif ($selectedPackage->term == 'yearly') {
+            $exDate = Carbon::now()->addYear()->format('d-m-Y');
+        } elseif ($selectedPackage->term == 'lifetime') {
+            $exDate = Carbon::maxValue()->format('d-m-Y');
+        }
+        // store a new membership for selected package
+        $selectedMemb = Membership::create([
+            'price' => $selectedPackage->price,
+            'currency' => $be->base_currency_text,
+            'currency_symbol' => $be->base_currency_symbol,
+            'payment_method' => $request->payment_method,
+            'transaction_id' => uniqid(),
+            'status' => 1,
+            'receipt' => NULL,
+            'transaction_details' => NULL,
+            'settings' => json_encode($be),
+            'package_id' => $selectedPackage->id,
+            'user_id' => $userId,
+            'start_date' => Carbon::parse(Carbon::now()->format('d-m-Y')),
+            'expire_date' => Carbon::parse($exDate),
+            'is_trial' => 0,
+            'trial_days' => 0,
+        ]);
+
+        // if the user has a next package to activate & selected package is not 'lifetime' package
+        if (!empty($nextMembership) && $selectedPackage->term != 'lifetime') {
+            $nextPackage = Package::find($nextMembership->package_id);
+
+            // calculate & store next membership's start_date
+            $nextMembership->start_date = Carbon::parse(Carbon::parse($exDate)->addDay()->format('d-m-Y'));
+
+            // calculate & store expire date for next membership
+            if ($nextPackage->term == 'monthly') {
+                $exDate = Carbon::parse(Carbon::parse(Carbon::parse($exDate)->addDay()->format('d-m-Y'))->addMonth()->format('d-m-Y'));
+            } elseif ($nextPackage->term == 'yearly') {
+                $exDate = Carbon::parse(Carbon::parse(Carbon::parse($exDate)->addDay()->format('d-m-Y'))->addYear()->format('d-m-Y'));
+            } else {
+                $exDate = Carbon::parse(Carbon::maxValue()->format('d-m-Y'));
+            }
+            $nextMembership->expire_date = $exDate;
+            $nextMembership->save();
+        } 
+        
+
+        $currentPackage = Package::select('title')->findOrFail($currMembership->package_id);
+        $this->sendMail($selectedMemb, $selectedPackage, $request->payment_method, $user, $bs, $be, 'admin_changed_current_package', $currentPackage->title);
+
+
+        Session::flash('success', 'Current Package changed successfully!');
+        return back();
+    }
+
+    public function addCurrPackage(Request $request) {
+        $userId = $request->user_id;
+        $user = User::findOrFail($userId);
+        $be = BasicExtended::first();
+        $bs = BasicSetting::select('website_title')->first();
+        
+        $selectedPackage = Package::find($request->package_id);
+
+        // calculate expire date for selected package
+        if ($selectedPackage->term == 'monthly') {
+            $exDate = Carbon::now()->addMonth()->format('d-m-Y');
+        } elseif ($selectedPackage->term == 'yearly') {
+            $exDate = Carbon::now()->addYear()->format('d-m-Y');
+        } elseif ($selectedPackage->term == 'lifetime') {
+            $exDate = Carbon::maxValue()->format('d-m-Y');
+        }
+        // store a new membership for selected package
+        $selectedMemb = Membership::create([
+            'price' => $selectedPackage->price,
+            'currency' => $be->base_currency_text,
+            'currency_symbol' => $be->base_currency_symbol,
+            'payment_method' => $request->payment_method,
+            'transaction_id' => uniqid(),
+            'status' => 1,
+            'receipt' => NULL,
+            'transaction_details' => NULL,
+            'settings' => json_encode($be),
+            'package_id' => $selectedPackage->id,
+            'user_id' => $userId,
+            'start_date' => Carbon::parse(Carbon::now()->format('d-m-Y')),
+            'expire_date' => Carbon::parse($exDate),
+            'is_trial' => 0,
+            'trial_days' => 0,
+        ]);
+
+        $this->sendMail($selectedMemb, $selectedPackage, $request->payment_method, $user, $bs, $be, 'admin_added_current_package');
+
+        Session::flash('success', 'Current Package has been added successfully!');
+        return back();
+    }
+
+    public function removeNextPackage(Request $request) {
+        $userId = $request->user_id;
+        $user = User::findOrFail($userId);
+        $be = BasicExtended::first();
+        $bs = BasicSetting::select('website_title')->first();
+        $nextMembership = UserPermissionHelper::nextMembership($userId);
+        // set the start_date to unlimited
+        $nextMembership->start_date = Carbon::parse(Carbon::maxValue()->format('d-m-Y'));
+        $nextMembership->modified = 1;
+        $nextMembership->save();
+
+        $nextPackage = Package::select('title')->findOrFail($nextMembership->package_id);
+
+
+        $this->sendMail(NULL, NULL, $request->payment_method, $user, $bs, $be, 'admin_removed_next_package', NULL, $nextPackage->title);
+
+        Session::flash('success', 'Next Package removed successfully!');
+        return back();
+    }
+
+    public function changeNextPackage(Request $request) {
+        $userId = $request->user_id;
+        $user = User::findOrFail($userId);
+        $bs = BasicSetting::select('website_title')->first();
+        $be = BasicExtended::first();
+        $nextMembership = UserPermissionHelper::nextMembership($userId);
+        $nextPackage = Package::find($nextMembership->package_id);
+        $selectedPackage = Package::find($request->package_id);
+        
+        $prevStartDate = $nextMembership->start_date;
+        // set the start_date to unlimited
+        $nextMembership->start_date = Carbon::parse(Carbon::maxValue()->format('d-m-Y'));
+        $nextMembership->modified = 1;
+        $nextMembership->save();
+
+        // calculate expire date for selected package
+        if ($selectedPackage->term == 'monthly') {
+            $exDate = Carbon::parse($prevStartDate)->addMonth()->format('d-m-Y');
+        } elseif ($selectedPackage->term == 'yearly') {
+            $exDate = Carbon::parse($prevStartDate)->addYear()->format('d-m-Y');
+        } elseif ($selectedPackage->term == 'lifetime') {
+            $exDate = Carbon::parse(Carbon::maxValue()->format('d-m-Y'));
+        }
+
+        // store a new membership for selected package
+        $selectedMemb = Membership::create([
+            'price' => $selectedPackage->price,
+            'currency' => $be->base_currency_text,
+            'currency_symbol' => $be->base_currency_symbol,
+            'payment_method' => $request->payment_method,
+            'transaction_id' => uniqid(),
+            'status' => 1,
+            'receipt' => NULL,
+            'transaction_details' => NULL,
+            'settings' => json_encode($be),
+            'package_id' => $selectedPackage->id,
+            'user_id' => $userId,
+            'start_date' => Carbon::parse($prevStartDate),
+            'expire_date' => Carbon::parse($exDate),
+            'is_trial' => 0,
+            'trial_days' => 0,
+        ]);
+
+        $this->sendMail($selectedMemb, $selectedPackage, $request->payment_method, $user, $bs, $be, 'admin_changed_next_package', $nextPackage->title);
+
+        Session::flash('success', 'Next Package changed successfully!');
+        return back();
+    }
+
+    public function addNextPackage(Request $request) {
+        $userId = $request->user_id;
+
+        $hasPendingMemb = UserPermissionHelper::hasPendingMembership($userId);
+        if($hasPendingMemb) {
+            Session::flash('membership_warning', 'This user already has a Pending Package. Please take an action (change / remove / approve / reject) for that package first.');
+            return back();
+        }
+
+        $currMembership = UserPermissionHelper::userPackage($userId);
+        $currPackage = Package::find($currMembership->package_id);
+        $be = BasicExtended::first();
+        $user = User::findOrFail($userId);
+        $bs = BasicSetting::select('website_title')->first();
+        
+        $selectedPackage = Package::find($request->package_id);
+
+        if ($currMembership->is_trial == 1) {
+            Session::flash('membership_warning', 'If your current package is trial package, then you have to change / remove the current package first.');
+            return back();
+        }
+
+
+        // if current package is not lifetime package
+        if ($currPackage->term != 'lifetime') {
+            // calculate expire date for selected package
+            if ($selectedPackage->term == 'monthly') {
+                $exDate = Carbon::parse($currMembership->expire_date)->addDay()->addMonth()->format('d-m-Y');
+            } elseif ($selectedPackage->term == 'yearly') {
+                $exDate = Carbon::parse($currMembership->expire_date)->addDay()->addYear()->format('d-m-Y');
+            } elseif ($selectedPackage->term == 'lifetime') {
+                $exDate = Carbon::parse(Carbon::maxValue()->format('d-m-Y'));
+            }
+            // store a new membership for selected package
+            $selectedMemb = Membership::create([
+                'price' => $selectedPackage->price,
+                'currency' => $be->base_currency_text,
+                'currency_symbol' => $be->base_currency_symbol,
+                'payment_method' => $request->payment_method,
+                'transaction_id' => uniqid(),
+                'status' => 1,
+                'receipt' => NULL,
+                'transaction_details' => NULL,
+                'settings' => json_encode($be),
+                'package_id' => $selectedPackage->id,
+                'user_id' => $userId,
+                'start_date' => Carbon::parse(Carbon::parse($currMembership->expire_date)->addDay()->format('d-m-Y')),
+                'expire_date' => Carbon::parse($exDate),
+                'is_trial' => 0,
+                'trial_days' => 0,
+            ]);
+
+            $this->sendMail($selectedMemb, $selectedPackage, $request->payment_method, $user, $bs, $be, 'admin_added_next_package');
+        } else {
+            Session::flash('membership_warning', 'If your current package is lifetime package, then you have to change / remove the current package first.');
+            return back();
+        }
+
+
+        Session::flash('success', 'Next Package has been added successfully!');
+        return back();
+    }
+
+
 }

@@ -37,9 +37,23 @@
                                   method="post">
                                 {{csrf_field()}}
                                 <div class="form-group">
-                                    <label for="">Base Color</label>
+                                    <label for="">
+                                        Base Color
+                                        @if ($userBs->theme == 3 || $userBs->theme == 5)
+                                            (Primary)
+                                        @endif
+                                    </label>
                                     <input type="text" class="form-control jscolor" name="base_color" value="{{$data->base_color}}">
                                 </div>
+
+                                @if ($userBs->theme == 3 || $userBs->theme == 5)
+                                    <div class="form-group">
+                                        <label for="">
+                                            Base Color (Secondary)
+                                        </label>
+                                        <input type="text" class="form-control jscolor" name="secondary_base_color" value="{{$data->secondary_base_color}}">
+                                    </div>
+                                @endif
                             </form>
                         </div>
                     </div>

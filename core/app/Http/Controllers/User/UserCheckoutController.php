@@ -172,7 +172,7 @@ class UserCheckoutController extends Controller
             $transaction_details = "offline";
             $password = uniqid('qrcode');
             $this->store($request, $transaction_id, json_encode($transaction_details), $amount, $be, $password);
-            return view('front.offline-success');
+            return redirect()->route('success.page');
 
         }
     }
@@ -199,7 +199,7 @@ class UserCheckoutController extends Controller
             if(($previousPackage->term === 'lifetime' || $previousMembership->is_trial == 1) && $transaction_details != '"offline"')
             {
                 $membership = Membership::find($previousMembership->id);
-                $membership->expire_date = Carbon::parse($request['start_date']);
+                $membership->expire_date = Carbon::parse($request['start_date'])->subDay();
                 $membership->save();
             }
         }

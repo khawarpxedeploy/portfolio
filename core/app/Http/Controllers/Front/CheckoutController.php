@@ -305,6 +305,8 @@ class CheckoutController extends Controller
             $package = Package::findOrFail($request['package_id']);
             $features = json_decode($package->features, true);
             $features[] = "Contact";
+            $features[] = "Footer Mail";
+            $features[] = "Profile Listing";
             UserPermission::create([
                 'package_id' => $request['package_id'],
                 'user_id' => $user->id,

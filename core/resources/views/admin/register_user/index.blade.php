@@ -55,6 +55,7 @@
                         <th scope="col">Username</th>
                         <th scope="col">Email</th>
                         <th scope="col">Featured</th>
+                        <th scope="col">{{__('Preview Template')}}</th>
                         <th scope="col">Email Status</th>
                         <th scope="col">Account</th>
                         <td scope="col">Action</td>
@@ -80,6 +81,21 @@
                                   <input type="hidden" name="user_id" value="{{$user->id}}">
                               </form>
                           </td>
+
+                          <td>
+                              <div class="d-inline-block">
+                                <select data-user_id="{{$user->id}}" class="template-select form-control form-control-sm {{$user->preview_template == 1 ? 'bg-success' : 'bg-danger'}}" name="preview_template">
+                                    <option value="1" {{$user->preview_template == 1 ? 'selected' : ''}}>{{__('Yes')}}</option>
+                                    <option value="0" {{$user->preview_template == 0 ? 'selected' : ''}}>{{__('No')}}</option>
+                                </select>
+                              </div>
+                              @if ($user->preview_template == 1)
+                              <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#templateImgModal{{$user->id}}">{{__('Edit')}}</button>
+                              @endif
+                          </td>
+
+                          @includeIf('admin.register_user.template-modal')
+                          @includeIf('admin.register_user.template-image-modal')
 
                           <td>
                           <form id="emailForm{{$user->id}}" class="d-inline-block" action="{{route('register.user.email')}}" method="post">
@@ -238,8 +254,8 @@
           <div class="form-group">
             <label for="">Publicly Hidden *</label>
             <select name="online_status" class="form-control">
-              <option value="1">Yes</option>
-              <option value="0">No</option>
+              <option value="1">No</option>
+              <option value="0">Yes</option>
             </select>
             <p id="erronline_status" class="text-danger mb-0 em"></p>
           </div>
@@ -251,4 +267,26 @@
     </div>
   </div>
 </div>
+@endsection
+
+
+
+@section('scripts')
+    <script>
+      $(document).ready(function() {
+        $(".template-select").on('change', function() {
+          let userId = $(this).data('user_id');
+          let val = $(this).val();
+
+          if(val == 1) {
+            $("#templateModal" + userId).modal('show');
+          }
+
+          $(`#templateModal${userId} input[name='template']`).val(val); 
+          if(val == 0) {
+            $(`#templateForm${userId}`).trigger('submit');
+          }
+        });
+      });
+    </script>
 @endsection

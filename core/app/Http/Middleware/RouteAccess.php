@@ -29,8 +29,15 @@ class RouteAccess
         $packagePermissions = UserPermissionHelper::packagePermission($user->id);
         $packagePermissions = json_decode($packagePermissions, true);
 
-        if (!in_array($page,$userPermissions) || !in_array($page,$packagePermissions)) {
-            return redirect()->route('front.user.detail.view', getParam());
+        // dd(!in_array($page,$userPermissions));
+        if ($page == 'Contact' || $page == 'Experience') {
+            if (!in_array($page,$userPermissions)) {
+                return redirect()->route('front.user.detail.view', getParam());
+            }
+        } else {
+            if (!in_array($page,$userPermissions) || !in_array($page,$packagePermissions)) {
+                return redirect()->route('front.user.detail.view', getParam());
+            }
         }
 
         return $next($request);

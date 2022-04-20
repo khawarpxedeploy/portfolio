@@ -6,12 +6,12 @@
 
 @if ($vcard->direction == 2)
 @section('rtl-css')
-<link rel="stylesheet" href="{{asset('assets/front/css/profile/vcard-rtl.css')}}">
+<link rel="stylesheet" href="{{asset('assets/front/css/profile/vcard/template1234/vcard-rtl.css')}}">
 @endsection
 @endif
 
 @section('base-color')
-<link rel="stylesheet" href="{{asset('assets/front/css/profile/vcard-base-color.php').'?color='.$vcard->base_color}}">
+<link rel="stylesheet" href="{{asset('assets/front/css/profile/vcard/template1234/vcard-base-color.php').'?color='.$vcard->base_color}}">
 @endsection
 
 @section('og-image', asset('assets/front/img/user/vcard/' . $vcard->cover_image))
@@ -348,6 +348,9 @@
                         <form action="{{route('front.contact.message', getParam())}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="id" value="{{$vcard->user_id}}">
+                            <input type="hidden" name="type" value="vcard">
+                            <input type="hidden" name="to_name" value="{{$vcard->name}}">
+                            <input type="hidden" name="to_mail" value="{{$vcard->email}}">
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form_group">
@@ -394,51 +397,4 @@
             </div>
         </div>
     </div><!--====== End Page Wrapper ======-->
-    <!-- Modal -->
-    <div class="modal fade" id="socialMediaModal" tabindex="-1" role="dialog" aria-labelledby="socialMediaModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Share On</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="actions">
-                        <div class="action-btn">
-                            <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{url()->current()}}&src=sdkpreparse"><i class="fab fa-facebook-f"></i></a>
-                            <br>
-                            <span>Facebook</span>
-                        </div>
-                        <div class="action-btn">
-                            <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={{urlencode(url()->current()) }}" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
-                            <br>
-                            <span>Linkedin</span>
-                        </div>
-                        <div class="action-btn">
-                            <a class="twitter" href="https://twitter.com/intent/tweet?text={{url()->current()}}"><i class="fab fa-twitter"></i></a>
-                            <br>
-                            <span>Twitter</span>
-                        </div>
-                        <div class="action-btn">
-                            <a class="whatsapp" href="whatsapp://send?text={{url()->current()}}"><i class="fab fa-whatsapp"></i></a>
-                            <br>
-                            <span>Whatsapp</span>
-                        </div>
-                        <div class="action-btn">
-                            <a href="sms:?body={{url()->current()}}" class="sms"><i class="fas fa-sms"></i></a>
-                            <br>
-                            <span>SMS</span>
-                        </div>
-                        <div class="action-btn">
-                            <a class="mail" href="mailto:?subject=Digital Card&body=Check out this digital card {{url()->current()}}."><i class="fas fa-at"></i></a>
-                            <br>
-                            <span>Mail</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection

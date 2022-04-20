@@ -22,6 +22,19 @@
 {{$keywords["Blog_Details"] ?? "Blog Details"}}
 @endsection
 
+@if ($userBs->theme == 3)
+    @section('styles')
+        <style>
+            .post-img {
+                text-align: center;
+            }
+            .single-page-details .single-page-wrapper .post-item .post-img img {
+                width: auto;
+            }
+        </style>
+    @endsection
+@endif
+
 @section('content')
 
 <section class="single-page-details pb-30 inner-section-gap">

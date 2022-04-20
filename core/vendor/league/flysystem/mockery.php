@@ -29,6 +29,27 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
+    public function changePreferences($userId) {
+        $currentPackage = UserPermissionHelper::currentPackagePermission($userId);
+
+        $preference = UserPermission::where([
+            ['user_id',$userId]
+        ])->first();
+
+        // if current package does not match with 'package_id' of 'user_permissions' table, then change 'package_id' in 'user_permissions'
+        if (!empty($currentPackage) && ($currentPackage->id != $preference->package_id)) {
+            $preference->package_id = $currentPackage->id;
+
+            $features = !empty($currentPackage->features) ? json_decode($currentPackage->features, true) : [];
+            $features[] = "Contact";
+            $features[] = "Footer Mail";
+            $features[] = "Profile Listing";
+            $preference->permissions = json_encode($features);
+            $preference->package_id = $currentPackage->id;
+            $preference->save();
+        }
+    }
+
     /**
      * Bootstrap any application services.
      *
@@ -73,17 +94,24 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer(['user.*'], function ($view)
         {
+            
             if (Auth::check()) {
-                $userBs = DB::table('user_basic_settings')->where('user_id', Auth::user()->id)->first();
+                $userId = Auth::user()->id;
+                // change package_id in 'user_permissions' 
+                $this->changePreferences($userId);
+
+
+                $userBs = DB::table('user_basic_settings')->where('user_id', $userId)->first();
 
                 $view->with('userBs', $userBs );
             }
         });
 
-        View::composer(['user.profile.*', 'user.profile1.*'], function ($view)
+        View::composer(['user.profile.*', 'user.profile1.*', 'user.profile-common.*'], function ($view)
         {
             $user = getUser();
-
+            // change package_id in 'user_permissions' 
+            $this->changePreferences($user->id);
 
             if (session()->has('user_lang')) {
                 $userCurrentLang = UserLanguage::where('code', session()->get('user_lang'))->where('user_id', $user->id)->first();
@@ -103,10 +131,12 @@ class AppServiceProvider extends ServiceProvider
             $userSeo = SEO::where('language_id', $userCurrentLang->id)->where('user_id', $user->id)->first();
             $userLangs = UserLanguage::where('user_id', $user->id)->get();
 
-            $currentPackage = UserPermissionHelper::userPackage($user->id);
+            $cuurentSub = UserPermissionHelper::userPackage($user->id);
+
+
             $preferences = UserPermission::where([
                 ['user_id',$user->id],
-                ['package_id',$currentPackage->package_id]
+                ['package_id',$cuurentSub->package_id]
             ])->first();
             $userPermissions = isset($preferences) ? json_decode($preferences->permissions, true) : [];
             $packagePermissions = UserPermissionHelper::packagePermission($user->id);

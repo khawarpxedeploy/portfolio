@@ -219,7 +219,7 @@ class PaymentLogController extends Controller
         $membership->update(['status' => $request->status]);
 
         session()->flash('success', "Membership status changed successfully!");
-        return redirect()->route('admin.payment-log.index');
+        return back();
     }
 
     /**
