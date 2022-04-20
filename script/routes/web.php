@@ -5,8 +5,6 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
-dd('ok');
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
