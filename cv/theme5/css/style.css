@@ -1,0 +1,146 @@
+
+body {
+    background: bisque;
+    font-family: Jost, sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+.f-right {
+    float: right;
+}
+
+.f-left {
+    float: left;
+}
+
+.main-page-area {
+    background: rgb(255, 255, 255);
+    padding: 30px;
+}
+
+.main-page-section {
+    background: rgb(255, 255, 255);
+}
+
+.header-main-section {
+    background: rgb(56, 180, 172);
+    padding: 70px 0px;
+    display: inherit;
+}
+
+.header-data {
+    display: inline-block;
+    border: 1px solid rgb(255, 255, 255);
+    padding: 30px 130px;
+    border-radius: 5px;
+}
+
+.header-data p {
+    margin-bottom: 0px;
+}
+
+.header-data h2 {
+    color: rgb(255, 255, 255);
+    font-size: 45px;
+    margin-bottom: 0px;
+}
+
+.header-data p {
+    color: rgb(239, 239, 239);
+    font-size: 22px;
+    margin-bottom: 0px;
+}
+
+.main-body-area {
+    padding: 40px;
+}
+
+.single-title h4 {
+    text-transform: uppercase;
+    letter-spacing: 7px;
+    font-size: 28px;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.single-des p {
+    color: rgb(102, 102, 102);
+    line-height: 32px;
+}
+
+.single-section {
+    margin-bottom: 40px;
+}
+
+.single-des.experience {
+    margin-top: 35px;
+}
+
+.single-des.experience h6 {
+    color: rgb(51, 51, 51);
+    font-size: 18px;
+}
+
+.col-lg-8.right-border {
+    border-right: 1px solid;
+}
+
+.single-des .contact {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.single-des .contact strong {
+    color: #464444;
+}
+
+.single-des ul li {
+    margin-bottom: 10px;
+}
+
+.single-education {
+    margin-top: 25px;
+}
+
+.education-name h5 {
+    font-weight: 400;
+    margin-bottom: 3px;
+}
+
+.education-year p {
+    margin-bottom: 0;
+}
+
+.header-top-area {
+    background: #fff;
+    padding: 25px 50px;
+    margin-bottom: 50px;
+}
+
+.back-btn a {
+    color: #fff;
+    text-decoration: none;
+    background: #4a22ea;
+    padding: 11px 25px;
+    border-radius: 5px;
+}
+
+.header-download-btn button {
+    border: 2px solid #571bfd;
+    padding: 9px 24px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    color: #571bfd;
+    font-weight: 500;
+    font-size: 16px;
+    background: transparent;
+}
+
+.header-download-btn button svg {
+    padding-right: 5px;
+    font-size: 24px;
+}
