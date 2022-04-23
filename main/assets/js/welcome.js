@@ -85,23 +85,23 @@ function information() {
                                   </div>
                                   <div class="pricing-list">
                                       <ul>
-                                          <li class="${plan.resume_builder == '0' ? 'active' : ''}"><span class="iconify" ${plan.resume_builder == '1' ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Resume Builder</li>
+                                          <li class="${plan.resume_builder === 0 ? 'active' : ''}"><span class="iconify" ${plan.resume_builder === 1 ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Resume Builder</li>
 
-                                          <li class="${plan.portfolio_builder == '0' ? 'active' : ''}"><span class="iconify" ${plan.portfolio_builder == '1' ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Portfolio Builder</li>
+                                          <li class="${plan.portfolio_builder === 0 ? 'active' : ''}"><span class="iconify" ${plan.portfolio_builder === 1 ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Portfolio Builder</li>
 
-                                          <li class="${plan.custom_domain == '0' ? 'active' : ''}"><span class="iconify" ${plan.custom_domain == '1' ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Custom Domain</li>
+                                          <li class="${plan.custom_domain === 0 ? 'active' : ''}"><span class="iconify" ${plan.custom_domain === 1 ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Custom Domain</li>
 
-                                          <li class="${plan.sub_domain == '0' ? 'active' : ''}"><span class="iconify" ${plan.sub_domain == '1' ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Sub Domain</li>
+                                          <li class="${plan.sub_domain === 0 ? 'active' : ''}"><span class="iconify" ${plan.sub_domain === 1 ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Sub Domain</li>
                                         
                                           <li><span class="iconify" data-icon="akar-icons:check" data-inline="false"></span>Storage Limit: ${plan.storage_size} GB</li>
 
                                           <li><span class="iconify" data-icon="akar-icons:check" data-inline="false"></span>Post Limit: ${plan.post_limit}</li>
 
-                                          <li class="${plan.online_businesscard == '0' ? 'active' : ''}"><span class="iconify" ${plan.online_businesscard == '1' ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Online Business Card</li>
+                                          <li class="${plan.online_businesscard === 0 ? 'active' : ''}"><span class="iconify" ${plan.online_businesscard === 1 ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Online Business Card</li>
 
-                                          <li class="${plan.online_cv == '0' ? 'active' : ''}"><span class="iconify" ${plan.online_cv == '1' ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Online CV</li>
+                                          <li class="${plan.online_cv === 0 ? 'active' : ''}"><span class="iconify" ${plan.online_cv === 1 ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>Online CV</li>
 
-                                          <li class="${plan.qrcode == '0' ? 'active' : ''}"><span class="iconify" ${plan.qrcode == '1' ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>QR Code</li>
+                                          <li class="${plan.qrcode === 0 ? 'active' : ''}"><span class="iconify" ${plan.qrcode === 1 ? 'data-icon="akar-icons:check"' : 'data-icon="akar-icons:cross"'} data-inline="false"></span>QR Code</li>
 
                                          
                                       </ul>

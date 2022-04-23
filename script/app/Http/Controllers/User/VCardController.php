@@ -33,7 +33,7 @@ class VCardController extends Controller
         $path   = $user_data->profile_image_url;
 
         $type   = pathinfo($path, PATHINFO_EXTENSION);
-        
+
         if(file_exists($path))
         {
             $data   = file_get_contents($path);
@@ -44,7 +44,6 @@ class VCardController extends Controller
 
         $base64 = base64_encode($data);
 
-        
         $data = 'BEGIN:VCARD' . PHP_EOL .
         'VERSION:3.0' . PHP_EOL .
         'FN:' . $user_data->name . PHP_EOL .
@@ -53,7 +52,7 @@ class VCardController extends Controller
         'TITLE:' . $user_data->tagline . PHP_EOL .
         'NOTE:' . $user_data->description . PHP_EOL;
         foreach ($user_data->social ?? [] as $key => $item) {
-            $social_data = $this->vcardtext($item->field_name, $item->value,$item->label);
+            $social_data = $this->vcardtext($item->field_name, $item->value);
             $data .= $social_data . PHP_EOL;
         }
         $data .= 'END:VCARD';
@@ -64,9 +63,8 @@ class VCardController extends Controller
         return response()->download($myFile)->deleteFileAfterSend(true);
 
     }
-    public function vcardtext($fieldname, $value,$label='')
+    public function vcardtext($fieldname, $value)
     {
-
         $social = [
             'Email'      => 'EMAIL:' . $value,
             'Phone'      => 'TEL:' . $value,
@@ -89,21 +87,8 @@ class VCardController extends Controller
             'Github'     => 'URL;TYPE=GITHUB:https://github.com/' . $value,
             'Paypal'     => 'URL;TYPE=YOUTUBE:https://youtube.com/' . $value,
             'Soundcloud' => 'URL;TYPE=SOUNDCLOUD:https://soundcloud.com/' . $value,
-            'Whatsapp'   => 'URL;TYPE=WHATSAPP:https://wa.me/'.$value,
-            'Telegram'   => 'URL;TYPE=TELEGRAM:https://t.me/'.$value,
-            'Skype'      => 'URL;TYPE=SKYPE:skype:'.$value.'?chat',
-            'Text'       => strtoupper($label).':' . $value,
-            'WeChat'     =>'URL;TYPE=WECHAT:weixin://dl/chat?'.$value,
-        ];
-
-        if (array_key_exists($fieldname,$social)) {
-            $social= $social[$fieldname];
-        }
-        else{
-          
-           $social = $social['Website'];
-          
-        }
+            'Whatsapp'   => 'URL;TYPE=WHATSAPP::https://wa.me/'.$value,
+        ][$fieldname];
         return $social;
     }
 
@@ -159,7 +144,7 @@ class VCardController extends Controller
         if ($user == null) {
             if ($request->hasFile('cover_image')) {
                 $cover_image      = $request->file('cover_image');
-                $cover_image_name = Str::random(20).'.'.$cover_image->getClientOriginalExtension();
+                $cover_image_name = Str::random(20). $cover_image->getClientOriginalExtension();
                 $cover_image_path = 'uploads/' . Auth::id() . '/vcard/';
                 $cover_image->move($cover_image_path, $cover_image_name);
                 $cover_image_url = $cover_image_path . $cover_image_name;
@@ -174,7 +159,7 @@ class VCardController extends Controller
                    }
                 }
                 $cover_image      = $request->file('cover_image');
-                $cover_image_name = Str::random(20).'.'.$cover_image->getClientOriginalExtension();
+                $cover_image_name = Str::random(20). $cover_image->getClientOriginalExtension();
                 $cover_image_path = 'uploads/' . Auth::id() . '/vcard/';
                 $cover_image->move($cover_image_path, $cover_image_name);
                 $cover_image_url = $cover_image_path . $cover_image_name;
@@ -187,7 +172,7 @@ class VCardController extends Controller
         if ($user == null) {
             if ($request->hasFile('profile_image')) {
                 $profile_image      = $request->file('profile_image');
-                $profile_image_name = Str::random(20).'.'.$profile_image->getClientOriginalExtension();
+                $profile_image_name = Str::random(20). $profile_image->getClientOriginalExtension();
                 $profile_image_path = 'uploads/' . Auth::id() . '/vcard/';
                 $profile_image->move($profile_image_path, $profile_image_name);
                 $profile_image_url = $profile_image_path . $profile_image_name;
@@ -202,7 +187,7 @@ class VCardController extends Controller
                    }
                 }
                 $profile_image      = $request->file('profile_image');
-                $profile_image_name = Str::random(20).'.'.$profile_image->getClientOriginalExtension();
+                $profile_image_name = Str::random(20). $profile_image->getClientOriginalExtension();
 
                 $profile_image_path = 'uploads/' . Auth::id() . '/';
                 $profile_image->move($profile_image_path, $profile_image_name);

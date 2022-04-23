@@ -206,7 +206,7 @@ class OptionSeeder extends Seeder
             [
                 "id" => 8,
                 "title" => "uploads/template/21/07/1706233972323751.png",
-                "slug" => "#",
+                "slug" => "/profile/user",
                 "type" => "portfolio_template",
                 "status" => 1,
                 "featured" => 0,
@@ -216,7 +216,7 @@ class OptionSeeder extends Seeder
             [
                 "id" => 9,
                 "title" => "uploads/template/21/07/1706233982372147.png",
-                "slug" => "#",
+                "slug" => "/profile/user",
                 "type" => "portfolio_template",
                 "status" => 1,
                 "featured" => 0,
@@ -226,7 +226,7 @@ class OptionSeeder extends Seeder
             [
                 "id" => 10,
                 "title" => "uploads/template/21/07/1706233990587122.png",
-                "slug" => "#",
+                "slug" => "/profile/user",
                 "type" => "portfolio_template",
                 "status" => 1,
                 "featured" => 0,
@@ -236,7 +236,7 @@ class OptionSeeder extends Seeder
             [
                 "id" => 11,
                 "title" => "uploads/template/21/07/1706233998995359.png",
-                "slug" => "#",
+                "slug" => "/profile/user",
                 "type" => "portfolio_template",
                 "status" => 1,
                 "featured" => 0,
@@ -246,7 +246,7 @@ class OptionSeeder extends Seeder
             [
                 "id" => 12,
                 "title" => "uploads/template/21/07/1706237425176093.png",
-                "slug" => "#",
+                "slug" => "/profile/user",
                 "type" => "resume_template",
                 "status" => 1,
                 "featured" => 0,
@@ -256,7 +256,7 @@ class OptionSeeder extends Seeder
             [
                 "id" => 13,
                 "title" => "uploads/template/21/07/1706237441024926.png",
-                "slug" => "#",
+                "slug" => "/profile/user",
                 "type" => "resume_template",
                 "status" => 1,
                 "featured" => 0,
@@ -266,7 +266,7 @@ class OptionSeeder extends Seeder
             [
                 "id" => 14,
                 "title" => "uploads/template/21/07/1706237450167797.png",
-                "slug" => "#",
+                "slug" => "/profile/user",
                 "type" => "resume_template",
                 "status" => 1,
                 "featured" => 0,
@@ -276,7 +276,7 @@ class OptionSeeder extends Seeder
             [
                 "id" => 15,
                 "title" => "uploads/template/21/07/1706237463681744.png",
-                "slug" => "#",
+                "slug" => "/profile/user",
                 "type" => "resume_template",
                 "status" => 1,
                 "featured" => 0,
@@ -286,7 +286,7 @@ class OptionSeeder extends Seeder
             [
                 "id" => 17,
                 "title" => "uploads/template/21/07/1706238011826706.png",
-                "slug" => "#",
+                "slug" => "/profile/user",
                 "type" => "vcard_template",
                 "status" => 1,
                 "featured" => 0,
@@ -296,7 +296,7 @@ class OptionSeeder extends Seeder
             [
                 "id" => 18,
                 "title" => "uploads/template/21/07/1706238019885428.png",
-                "slug" => "#",
+                "slug" => "/profile/user",
                 "type" => "vcard_template",
                 "status" => 1,
                 "featured" => 0,

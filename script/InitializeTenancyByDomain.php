@@ -34,9 +34,6 @@ class InitializeTenancyByDomain extends IdentificationMiddleware
      */
     public function handle($request, Closure $next)
     {
-         if (filter_protocol(url('/')) == env('APP_PROTOCOLESS_URL')) {
-                return redirect(env('APP_URL'));
-         }
         return $this->initializeTenancy(
            $request, $next, str_replace('www.', '', $request->getHost())
         );
